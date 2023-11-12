@@ -22,6 +22,9 @@ return new class extends Migration
             $table->enum('verification', ['verificado', 'sin verificar']);
             $table->timestamps();
 
+            $table->rememberToken();
+            $table->string('password');
+
             $table->foreignId('home')->nullable();
             $table->foreign('home')->references('id')->on('locations')->nullOnDelete()->cascadeOnUpdate();
         });

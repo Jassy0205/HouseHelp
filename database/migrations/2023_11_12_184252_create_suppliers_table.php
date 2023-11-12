@@ -20,6 +20,9 @@ return new class extends Migration
             $table->integer('email')->unique();
             $table->timestamps();
 
+            $table->rememberToken();
+            $table->string('password');
+
             $table->foreignId('company')->nullable();
             $table->foreign('company')->references('id')->on('locations')->nullOnDelete()->cascadeOnUpdate();
         });
