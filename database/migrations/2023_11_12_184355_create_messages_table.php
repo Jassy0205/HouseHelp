@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->string('content', 300);
+            $table->enum('Enviado por', ['client', 'provider']);
             $table->timestamps();
 
             $table->foreignId('provider')->nullable();
