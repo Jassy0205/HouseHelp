@@ -13,7 +13,7 @@ class Application extends Model
         'description',
     ];
 
-    public function suppliers() : BelongsToMany
+    public function suppliers()
     {
         return $this -> belongsToMany(Supplier::class, 'suppliers_applications');
     }

@@ -42,7 +42,7 @@ class Supplier extends Model
         'password' => 'hashed',
     ];
 
-    public function applications() : BelongsToMany
+    public function applications()
     {
         return $this -> belongsToMany(Application::class, 'suppliers_applications');
     }
