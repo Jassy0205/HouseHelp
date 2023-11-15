@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('city', 20);
             $table->string('department', 20);
-            $table->string('address', 15);
+            $table->string('address', 30);
             $table->string('neighborhood', 15);
-            $table->string('specifications', 20);
+            $table->string('specifications', 50);
             $table->timestamps();
         });
     }

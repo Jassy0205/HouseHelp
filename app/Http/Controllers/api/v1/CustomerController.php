@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use App\Http\Requests\api\v1\CustomerStoreRequest;
+use App\Http\Requests\api\v1\CustomerUpdateRequest;
 
 class CustomerController extends Controller
 {
@@ -13,7 +15,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::orderBy('name', 'asc') -> get();
+
+        return response()->json(['data' => $customers], 200); //Código de respuesta
     }
 
     /**
@@ -30,15 +34,15 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Customer $customer)
     {
-        return response()->json(['data' => $user], 200);
+        return response()->json(['data' => $customer], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, Customer $customer)
     {
         //
     }
@@ -46,7 +50,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Customer $customer)
     {
         //
     }

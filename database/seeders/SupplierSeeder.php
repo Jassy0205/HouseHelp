@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Supplier;
 
 class SupplierSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class SupplierSeeder extends Seeder
         Supplier::create([
             'name' => 'Construcciones S.A',
             'owner' => 'Sebastian Alvarez',
-            'phone' => 3153015393,
+            'phone' => "3153015393",
             'description' => 'Somos una empresa lider en consrucción y planificación de espacios',
             'email' => 'contrucciones_sa@gmail.com',
             'password' => 'hola123',
@@ -27,7 +28,7 @@ class SupplierSeeder extends Seeder
         Supplier::create([
             'name' => 'InElectric',
             'owner' => 'Maria Castro',
-            'phone' => 3163015393,
+            'phone' => "3163015393",
             'description' => 'Expertos en instalación y repación de redes o dispositivos eléctrica',
             'email' => 'in_electric@gmail.com',
             'password' => 'hola123',

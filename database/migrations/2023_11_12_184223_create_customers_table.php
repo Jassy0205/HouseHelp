@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 20);
             $table->string('lastname', 20);
-            $table->integer('phone');
+            $table->string('phone', 10);
             $table->string('email')->unique();
             $table->integer('age');
             $table->enum('gender', ['F', 'M', 'No binario']);

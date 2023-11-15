@@ -24,7 +24,7 @@ class CustomerStoreRequest extends FormRequest
         return [
             'name' => 'required|max:20|min:4|string|ascii', #|alpha:asc
             'lastname' => 'required|max:20|min:4|string|ascii',
-            'phone' => 'required|digits:10',
+            'phone' => 'required|max:10|min:10|alpha_num:ascii',
             'email' => 'required|max:255|min:8|unique:customers,email|string|ascii',
             'age' => 'required|digits:2,3',
             'gender' => 'required|max:10|min:1|string|ascii',

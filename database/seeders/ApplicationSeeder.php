@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Application;
 
 class ApplicationSeeder extends Seeder
 {
@@ -15,12 +16,12 @@ class ApplicationSeeder extends Seeder
         Application::unguard(); 
         
         Application::create([
-            'descripcion' => 'Quisiera colocar camaras de vigilancia en mi apartamento',
+            'description' => 'Quisiera colocar camaras de vigilancia en mi apartamento',
             'client' => '2'
         ]);
 
         Application::create([
-            'descripcion' => 'Me gustaría instalar paneles solares en mi hogar',
+            'description' => 'Me gustaría instalar paneles solares en mi hogar',
             'client' => '2'
         ]);
 

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name', 45);
             $table->string('owner', 40);
-            $table->integer('phone');
+            $table->string('phone', 10);
             $table->string('description', 300);
-            $table->integer('email')->unique();
+            $table->string('email')->unique();
             $table->timestamps();
 
             $table->rememberToken();

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Message;
 
 class MessageSeeder extends Seeder
 {
@@ -30,14 +31,14 @@ class MessageSeeder extends Seeder
 
         Message::create([
             'content' => '¿Le parece bien el martes a las 2:00 pm?',
-            'Enviado por' => '2',
+            'by' => '2',
             'provider' => '2',
             'client' => '1',
         ]);
 
         Message::create([
             'content' => 'Si, claro',
-            'Enviado por' => '1',
+            'by' => '1',
             'provider' => '2',
             'client' => '1',
         ]);

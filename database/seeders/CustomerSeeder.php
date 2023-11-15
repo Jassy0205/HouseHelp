@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Customer;
 
 class CustomerSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class CustomerSeeder extends Seeder
         Customer::create([
             'name' => 'Jassy Melissa',
             'lastname' => 'Perea Mosquera',
-            'phone' => 3123015393,
+            'phone' => "3123015393",
             'email' => 'jassym.peream@gmail.com',
             'age' => 20,
             'gender' => 'F',
@@ -29,7 +30,7 @@ class CustomerSeeder extends Seeder
         Customer::create([
             'name' => 'Juan Manuel',
             'lastname' => 'Cabrera Montes',
-            'phone' => 3103015393,
+            'phone' => "3103015393",
             'email' => 'juanm.cabreram@gmail.com',
             'age' => 25,
             'gender' => 'M',
@@ -41,7 +42,7 @@ class CustomerSeeder extends Seeder
         Customer::create([
             'name' => 'Carlos',
             'lastname' => 'Marin Ortiz',
-            'phone' => 3113015393,
+            'phone' => "3113015393",
             'email' => 'carlos.marino@gmail.com',
             'age' => 31,
             'gender' => 'M',
