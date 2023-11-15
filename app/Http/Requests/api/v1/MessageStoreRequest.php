@@ -11,7 +11,7 @@ class MessageStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class MessageStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'content' => 'required|string|max:300|ascii',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'content.required' => 'El campo contenido es requerido',
+            'content.max' => 'El campo contenido debe tener una longitud maxima de 300 dígitos',
         ];
     }
 }

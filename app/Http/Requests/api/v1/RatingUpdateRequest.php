@@ -11,7 +11,7 @@ class RatingUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class RatingUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'star' => 'digits:1',
+            'comment' => 'max:300',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'comment.max' => 'El campo comentario debe tener una longitud maxima de 300 dígitos',
+
+            'star.digits' => 'El campo estrella debe tener una longitud de 1 dígito',
         ];
     }
 }

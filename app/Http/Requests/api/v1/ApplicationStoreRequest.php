@@ -11,7 +11,7 @@ class ApplicationStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class ApplicationStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'description' => 'required|string|max:300|ascii',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'description.required' => 'El campo descripción es requerido',
+            'description.max' => 'El campo descripción debe tener una longitud maxima de 300 dígitos',
         ];
     }
 }

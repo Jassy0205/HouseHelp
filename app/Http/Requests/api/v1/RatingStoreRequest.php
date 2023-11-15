@@ -11,7 +11,7 @@ class RatingStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,19 @@ class RatingStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'star' => 'required|digits:1',
+            'comment' => 'required|max:300|ascii',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'comment.required' => 'El campo comentario es requerido',
+            'comment.max' => 'El campo comentario debe tener una longitud maxima de 300 dígitos',
+
+            'star.required' => 'El campo estrella es requerido',
+            'star.digits' => 'El campo estrella debe tener una longitud de 1 dígito',
         ];
     }
 }

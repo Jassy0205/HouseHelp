@@ -11,7 +11,7 @@ class CustomerUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,32 @@ class CustomerUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'max:20|min:4|string|ascii', #|alpha:asc
+            'lastname' => 'max:20|min:4|string|ascii',
+            'phone' => 'digits:10',
+            'email' => 'max:255|min:8|unique:customers,email|string|ascii',
+            'age' => 'digits:2,3',
+            'gender' => 'max:10|min:1|string|ascii',
+            'password' => 'string|min:8|max:255'
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.min' => 'El campo nombre debe tener una longitud minima de 4 dígitos',
+            'name.max' => 'El campo nombre debe tener una longitud maxima de 20 dígitos',
+
+            'lastname.min' => 'El campo apellido debe tener una longitud minima de 4 dígitos',
+            'lastname.max' => 'El campo apellido debe tener una longitud maxima de 20 dígitos',
+
+            'email.min' => 'El campo email debe tener una longitud minima de 8 dígitos',
+            'age.digits' => 'El campo edad debe tener una longitud minima de 2, y maxima de 3 dígitos',
+
+            'gender.max' => 'El campo genero debe tener una longitud maxima de 10 dígitos, si su caso es "No binario" ',
+            'gender.min' => 'El campo genero debe tener una longitud minima de 1 dígito, si su caso es "F" o "M" ',
+
+            'password.min' => 'El campo especificaciones debe tener una longitud maxima de 8 dígitos',
         ];
     }
 }

@@ -16,14 +16,14 @@ class MessageSeeder extends Seeder
         
         Message::create([
             'content' => 'Buenos días, la licuadora no me enciende. Me gustaría contratar un servicio de revisión',
-            'Enviado por' => '1',
+            'by' => '1',
             'provider' => '2',
             'client' => '1',
         ]);
 
         Message::create([
             'content' => 'Buenos dias. No hay problema',
-            'Enviado por' => '2',
+            'by' => '2',
             'provider' => '2',
             'client' => '1',
         ]);
@@ -44,14 +44,14 @@ class MessageSeeder extends Seeder
 
         Message::create([
             'content' => 'Ok, entonces el martes a las 2:00 pm irá el técnico Raúl',
-            'Enviado por' => '2',
+            'by' => '2',
             'provider' => '2',
             'client' => '1',
         ]);
 
         Message::create([
             'content' => 'Muchas gracias',
-            'Enviado por' => '1',
+            'by' => '1',
             'provider' => '2',
             'client' => '1',
         ]);

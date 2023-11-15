@@ -11,7 +11,7 @@ class MessageUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class MessageUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'content' => 'string|max:300|ascii',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'content.max' => 'El campo contenido debe tener una longitud maxima de 300 dígitos',
         ];
     }
 }

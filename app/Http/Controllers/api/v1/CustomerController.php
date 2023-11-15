@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -19,17 +19,20 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CustomerStoreRequest $request)
     {
-        //
+        $customer = Customer::create($request->all());
+
+        return response()->json(['data' => $customer], 200);
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(User $user)
     {
-        //
+        return response()->json(['data' => $user], 200);
     }
 
     /**
