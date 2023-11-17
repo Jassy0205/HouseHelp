@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\location;
 use Illuminate\Http\Request;
+use App\Http\Requests\api\v1\LocationStoreRequest;
+use App\Http\Requests\api\v1\LocationUpdateRequest;
+use App\Http\Resources\api\v1\LocationResource;
 
 class LocationController extends Controller
 {
@@ -13,7 +16,9 @@ class LocationController extends Controller
      */
     public function index()
     {
-        //
+        $locations = Location::orderBy('department', 'asc') -> get();
+
+        return response()->json(['data' => LocationResource::collection($locations)], 200); //Código de respuesta
     }
 
     /**

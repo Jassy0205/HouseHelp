@@ -7,6 +7,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\api\v1\CustomerStoreRequest;
 use App\Http\Requests\api\v1\CustomerUpdateRequest;
+use App\Http\Resources\api\v1\CustomerResource;
 
 class CustomerController extends Controller
 {
@@ -17,7 +18,7 @@ class CustomerController extends Controller
     {
         $customers = Customer::orderBy('name', 'asc') -> get();
 
-        return response()->json(['data' => $customers], 200); //Código de respuesta
+        return response()->json(['data' => CustomerResource::collection($customers)], 200); //Código de respuesta
     }
 
     /**
@@ -36,7 +37,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return response()->json(['data' => $customer], 200);
+        return response()->json(['data' => CustomerResource::collection($customers)], 200);
     }
 
     /**
@@ -44,7 +45,9 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $customer -> update($request->all());
+
+        return response()->json(['data' => $customer], 200);
     }
 
     /**
@@ -52,6 +55,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer -> delete();
+
+        return response()->json(null, 204); //Codigo de error para "No content"
     }
 }

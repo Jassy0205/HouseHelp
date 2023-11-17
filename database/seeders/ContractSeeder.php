@@ -13,6 +13,15 @@ class ContractSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Contract::unguard(); 
+        
+        Contract::create([
+            'description' => 'Diseño y construcción de cocina integral',
+            'price' => 1625300,
+            'provider' => "1",
+            'client' => '3',
+        ]);
+
+        Contract::reguard();
     }
 }

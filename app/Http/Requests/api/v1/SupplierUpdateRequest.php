@@ -24,7 +24,7 @@ class SupplierUpdateRequest extends FormRequest
         return [
             'name' => 'max:45|min:4|string|ascii',
             'owner' => 'max:40|min:8|string|ascii',
-            'phone' => 'digits:10',
+            'phone' => 'max:10|min:10|string|alpha_num:ascii',
             'email' => 'max:255|min:8|unique:suppliers,email|string|ascii',
             'description' => 'max:300',
             'password' => 'string|min:8|max:255'
@@ -40,7 +40,8 @@ class SupplierUpdateRequest extends FormRequest
             'owner.min' => 'El campo propietario debe tener una longitud minima de 8 dígitos',
             'owner.max' => 'El campo propietario debe tener una longitud maxima de 40 dígitos',
             
-            'phone.digits' => 'El campo teléfono debe tener una longitud de 10 dígitos',
+            'phone.min' => 'El campo teléfono debe tener una longitud de 10 dígitos',
+            'phone.max' => 'El campo teléfono debe tener una longitud de 10 dígitos',
 
             'email.min' => 'El campo email debe tener una longitud minima de 8 dígitos',
 

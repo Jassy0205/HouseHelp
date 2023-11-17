@@ -24,7 +24,7 @@ class SupplierStoreRequest extends FormRequest
         return [
             'name' => 'required|max:45|min:4|string|ascii',
             'owner' => 'required|max:40|min:8|string|ascii',
-            'phone' => 'required|digits:10',
+            'phone' => 'required|max:10|min:10|string|alpha_num:ascii',
             'email' => 'required|max:255|min:8|unique:suppliers,email|string|ascii',
             'description' => 'required|max:300|ascii',
             'password' => 'required|string|min:8|max:255|ascii'
@@ -43,7 +43,8 @@ class SupplierStoreRequest extends FormRequest
             'owner.max' => 'El campo propietario debe tener una longitud maxima de 40 dígitos',
             
             'phone.required' => 'El campo teléfono es requerido',
-            'phone.digits' => 'El campo teléfono debe tener una longitud de 10 dígitos',
+            'phone.min' => 'El campo teléfono debe tener una longitud de 10 dígitos',
+            'phone.max' => 'El campo teléfono debe tener una longitud de 10 dígitos',
 
             'email.required' => 'El campo email es requerido',
             'email.unique' => 'El email ingresado ya existe',

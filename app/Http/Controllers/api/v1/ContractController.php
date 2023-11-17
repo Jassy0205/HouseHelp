@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Contract;
 use Illuminate\Http\Request;
+use App\Http\Requests\api\v1\ContractStoreRequest;
+use App\Http\Requests\api\v1\ContractUpdateRequest;
+use App\Http\Resources\api\v1\ContractResource;
 
 class ContractController extends Controller
 {
@@ -13,7 +16,9 @@ class ContractController extends Controller
      */
     public function index()
     {
-        //
+        $contracts = Contract::orderBy('description', 'asc') -> get();
+
+        return response()->json(['data' => ContractResource::collection($contracts)], 200); //Código de respuesta
     }
 
     /**

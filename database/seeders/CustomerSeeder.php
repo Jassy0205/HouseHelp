@@ -16,6 +16,7 @@ class CustomerSeeder extends Seeder
         Customer::unguard(); 
         
         Customer::create([
+            'identification_card' => '162655545',
             'name' => 'Jassy Melissa',
             'lastname' => 'Perea Mosquera',
             'phone' => "3123015393",
@@ -28,6 +29,7 @@ class CustomerSeeder extends Seeder
         ]);
 
         Customer::create([
+            'identification_card' => '13255154',
             'name' => 'Juan Manuel',
             'lastname' => 'Cabrera Montes',
             'phone' => "3103015393",
@@ -40,6 +42,7 @@ class CustomerSeeder extends Seeder
         ]);
 
         Customer::create([
+            'identification_card' => '11515545',
             'name' => 'Carlos',
             'lastname' => 'Marin Ortiz',
             'phone' => "3113015393",

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->string('description', 500);
-            $table->float('price', 8, 3);
+            $table->integer('price');
             $table->timestamps();
 
             $table->foreignId('provider')->nullable();
