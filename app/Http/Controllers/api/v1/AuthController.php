@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Models\Supplier;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,6 @@ class AuthController extends Controller
         try {
             $request->validate([
                 'tipo' => 'required|in:customer,supplier',
-                //'email' => 'required|string|email|max:255|exists:customers',
                 'password' => 'required|string|min:7',
             ]);
         } catch (ValidationException $e) {
@@ -42,7 +42,7 @@ class AuthController extends Controller
         // Verificar que los datos provistos sean los correctos y que
         // efectivamente el usuario se autentique con ellos utilizando
         // los datos de la tabla "users".
-        if (!Auth::guard('web')->attempt($request->only('email', 'password')))// and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
+        if (!Auth::guard('web')->attempt($request->only('email', 'password')) and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
         {
             return response()->json(['message' => 'Invalid login details'], 401);
         }

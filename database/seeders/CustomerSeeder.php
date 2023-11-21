@@ -14,7 +14,7 @@ class CustomerSeeder extends Seeder
     public function run(): void
     {
         Customer::unguard(); 
-        
+
         Customer::create([
             'identification_card' => '162655545',
             'name' => 'Jassy Melissa',
@@ -55,5 +55,6 @@ class CustomerSeeder extends Seeder
         ]);
 
         Customer::reguard();
+        
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\api\v1\RatingResource;
 
 class RatingController extends Controller
 {
@@ -13,7 +14,9 @@ class RatingController extends Controller
      */
     public function index()
     {
-        //
+        $ratings = Rating::orderBy('content', 'asc') -> get();
+
+        return response()->json(['data' => RatingResource::collection($ratings)], 200); //Código de respuesta
     }
 
     /**

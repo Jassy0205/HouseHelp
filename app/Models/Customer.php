@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\Customer as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Customer extends Model implements Authenticatable
+class Customer extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -20,7 +20,7 @@ class Customer extends Model implements Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'cedula',
+        'identification_card',
         'name',
         'lastname',
         'password',
