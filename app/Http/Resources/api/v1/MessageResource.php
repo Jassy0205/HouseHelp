@@ -15,8 +15,20 @@ class MessageResource extends JsonResource
     public function toArray(Request $request): array
     {
         //return parent::toArray($request);
+        if ($this->by == "client")
+        {
+            $by = $this->customer->name;
+            $to = $this->supplier->name;
+        }else
+        {
+            $by = $this->supplier->name;
+            $to = $this->customer->name;
+        }
+
         return [
             'code' => $this->id,
+            'by' => $this->by. ' - ' .$by,
+            'to' => $to,
             'message' => $this->content,
             'send_date' => $this->updated_at
         ];

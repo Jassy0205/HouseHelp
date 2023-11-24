@@ -42,13 +42,14 @@ class AuthController extends Controller
         // Verificar que los datos provistos sean los correctos y que
         // efectivamente el usuario se autentique con ellos utilizando
         // los datos de la tabla "users".
-        if (!Auth::guard('web')->attempt($request->only('email', 'password')) and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
+        if (!Auth::guard('customer')->attempt($request->only('email', 'password')) and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
         {
             return response()->json(['message' => 'Invalid login details'], 401);
         }
 
         if ($request['tipo'] == 'customer')
-        {
+        {     
+            //Auth::shouldUse('customer');
             // Una vez autenticado, obtener la información del usuario en sesión.
             $tokenType = 'Bearer';
             $customer = Customer::where('email', $request['email'])->firstOrFail();
@@ -78,7 +79,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->customer()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([ 'message' => 'Token revoked'], 200); 
     }

@@ -14,6 +14,11 @@ class ApplicationSeeder extends Seeder
     public function run(): void
     {
         Application::unguard(); 
+
+        Application::create([
+            'description' => 'Me gustaría automatizar todas las luces en mi hogar',
+            'client' => '1'
+        ]);
         
         Application::create([
             'description' => 'Quisiera colocar camaras de vigilancia en mi apartamento',

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable_2;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Application;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -49,7 +50,7 @@ class Supplier extends Authenticatable_2
 
     public function applications()
     {
-        return $this -> belongsToMany(Application::class, 'suppliers_applications');
+        return $this -> belongsToMany(Application::class, 'supplier_applications', 'provider', 'publishing')->withPivot('status');
     }
 
     public function location() : BelongsTo

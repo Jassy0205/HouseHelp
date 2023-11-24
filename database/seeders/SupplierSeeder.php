@@ -20,7 +20,7 @@ class SupplierSeeder extends Seeder
             'owner' => 'Sebastian Alvarez',
             'phone' => "3153015393",
             'description' => 'Somos una empresa lider en consrucción y planificación de espacios',
-            'email' => 'contrucciones_sa@gmail.com',
+            'email' => 'construcciones_sa@gmail.com',
             'password' => 'hola123',
             'company' => '4'
         ]);

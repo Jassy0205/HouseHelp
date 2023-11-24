@@ -37,7 +37,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return response()->json(['data' => CustomerResource::collection($customers)], 200);
+        return response()->json(['data' => new CustomerResource($customer)], 200);
     }
 
     /**

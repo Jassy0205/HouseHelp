@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('suppliers_applications', function (Blueprint $table) {
+        Schema::create('supplier_applications', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['rechazada', 'aceptada']);
+            $table->enum('status', ['revision', 'rechazada', 'aceptada']);
             $table->timestamps();
 
             $table->foreignId('provider')->nullable();
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('suppliers_applications');
+        Schema::dropIfExists('supplier_applications');
     }
 };

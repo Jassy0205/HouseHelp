@@ -2,8 +2,11 @@
 
 namespace App\Http\Resources\api\v1;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Models\Customer;
+use App\Models\Supplier;
 
 class ApplicationResource extends JsonResource
 {
@@ -14,6 +17,31 @@ class ApplicationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        //return parent::toArray($request);
+
+        $customer = Customer::where('email', Auth::user()->email)->first();
+        $supplier = Supplier::where('email', Auth::user()->email)->first();
+
+        if ($supplier != null)
+        {
+            $status = $this->pivot->status;
+
+            return [
+                'code' => $this->id,
+                'description' => $this->description,
+                'by' => $this->customer->name . ' '. $this->customer->lastname,
+                'creation_date' => $this->updated_at,
+                'status' => $status,
+            ];
+        }else
+        {
+            return [
+                'code' => $this->id,
+                'description' => $this->description,
+                'by' => $this->customer->name . ' '. $this->customer->lastname,
+                'creation_date' => $this->updated_at,
+                'suppliers' => SupplierCustomerResource::collection($this->suppliers), 
+            ];
+        }
     }
 }
