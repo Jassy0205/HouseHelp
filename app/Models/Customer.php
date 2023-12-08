@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Customer extends Authenticatable
+class Customer extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -20,39 +20,13 @@ class Customer extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'identification_card',
-        'name',
-        'lastname',
-        'password',
-        'phone',
-        'email',
-        'age',
-        'gender',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public $timestamps = false;
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
-
-    public function location() : BelongsTo
+    public function user() : BelongsTo
     {
-        return $this -> belongsTo(Location::class, 'home');
+        return $this -> belongsTo(User::class, 'info_personal');
     }
 
     public function applications() : HasMany

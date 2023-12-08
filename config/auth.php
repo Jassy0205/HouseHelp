@@ -45,11 +45,6 @@ return [
             'driver' => 'session',
             'provider' => 'suppliers',
         ],
-
-        'customer' => [
-            'driver' => 'session',
-            'provider' => 'customers',
-        ],
     ],
 
     /*
@@ -81,11 +76,6 @@ return [
             'table' => 'suppliers',
         ],
 
-        'customers' => [
-            'driver' => 'database',
-            'table' => 'customers',
-        ],
-
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -115,13 +105,6 @@ return [
 
         'users' => [
             'provider' => 'users',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-
-        'customers' => [
-            'provider' => 'customers',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
