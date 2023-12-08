@@ -16,7 +16,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::orderBy('name', 'asc') -> get();
+        $customers = Customer::with(['user' => function ($query) {
+            $query->orderBy('name', 'asc');
+        }])->get();
 
         return response()->json(['data' => CustomerResource::collection($customers)], 200); //Código de respuesta
     }
@@ -26,9 +28,9 @@ class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request)
     {
-        $customer = Customer::create($request->all());
+        #$customer = Customer::create($request->all());
 
-        return response()->json(['data' => $customer], 200);
+        #return response()->json(['data' => $customer], 200);
     }
 
 
@@ -37,7 +39,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return response()->json(['data' => new CustomerResource($customer)], 200);
+        #return response()->json(['data' => new CustomerResource($customer)], 200);
     }
 
     /**
@@ -45,9 +47,9 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        $customer -> update($request->all());
+        #$customer -> update($request->all());
 
-        return response()->json(['data' => $customer], 200);
+        #return response()->json(['data' => $customer], 200);
     }
 
     /**
@@ -55,8 +57,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        $customer -> delete();
+        #$customer -> delete();
 
-        return response()->json(null, 204); //Codigo de error para "No content"
+        #return response()->json(null, 204); //Codigo de error para "No content"
     }
 }

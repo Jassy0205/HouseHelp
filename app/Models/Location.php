@@ -17,9 +17,9 @@ class Location extends Model
         'specifications',
     ];
 
-    public function customers() : HasMany
+    public function users() : HasMany
     {
-        return $this -> HasMany(Customer::class, 'home');
+        return $this -> HasMany(User::class, 'home');
     }
 
     public function suppliers() : HasMany

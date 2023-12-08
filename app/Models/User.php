@@ -4,12 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable_1;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
-class User extends Authenticatable_1
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -19,9 +21,14 @@ class User extends Authenticatable_1
      * @var array<int, string>
      */
     protected $fillable = [
+        'identification_card',
         'name',
-        'email',
+        'lastname',
         'password',
+        'phone',
+        'email',
+        'age',
+        'gender',
     ];
 
     /**
@@ -43,4 +50,14 @@ class User extends Authenticatable_1
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function location() : BelongsTo
+    {
+        return $this -> belongsTo(Location::class, 'home');
+    }
+
+    public function customers() : HasMany
+    {
+        return $this -> HasMany(Customer::class, 'info_personal');
+    }
 }

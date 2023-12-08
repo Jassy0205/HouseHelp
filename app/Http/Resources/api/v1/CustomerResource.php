@@ -3,6 +3,7 @@
 namespace App\Http\Resources\api\v1;
 
 use App\Models\location;
+use App\Models\User;
 use App\Http\Resources\api\v1\LocationResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -14,17 +15,20 @@ class CustomerResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+
     public function toArray(Request $request): array
     {
+        $user = User::find($this->info_personal);
         #return parent::toArray($request);
         return [
-            'identification' => $this->identification_card,
-            'full_name'  => $this->name. ' ' .$this->lastname, #Concatenación: $this->firstname . ' '. $this->lastname
-            'username'  => $this->email,
-            'phone' => $this->phone,
-            'gender' => $this->gender,
-            'creation_date' => $this->updated_at,
-            'home' => new LocationResource($this->location)
+            'code' => $this->id,
+            'identification' => $user->identification_card,
+            'full_name'  => $user->name. ' ' .$user->lastname, #Concatenación: $user->firstname . ' '. $user->lastname
+            'username'  => $user->email,
+            'phone' => $user->phone,
+            'gender' => $user->gender,
+            'creation_date' => $user->updated_at,
+            'home' => new LocationResource($user->location)
         ];
     }
 }

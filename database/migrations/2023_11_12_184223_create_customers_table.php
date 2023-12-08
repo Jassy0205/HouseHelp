@@ -13,21 +13,10 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('identification_card', 10);
-            $table->string('name', 20);
-            $table->string('lastname', 20);
-            $table->string('phone', 10);
-            $table->string('email')->unique();
-            $table->integer('age');
-            $table->enum('gender', ['F', 'M', 'No binario']);
             $table->enum('verification', ['verificado', 'sin verificar']);
-            $table->timestamps();
 
-            $table->rememberToken();
-            $table->string('password');
-
-            $table->foreignId('home')->nullable();
-            $table->foreign('home')->references('id')->on('locations')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('info_personal')->nullable()->unique();
+            $table->foreign('info_personal')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();
         });
     }
 

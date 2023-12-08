@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Customer;
+use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\User;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+
 
 class AuthController extends Controller
 {
@@ -27,7 +29,19 @@ class AuthController extends Controller
         if ($request['tipo'] == 'customer')
         {
             try {
-                $request->validate(['email' => 'required|string|email|max:255|exists:customers',]);
+                $validator = Validator::make($request->all(), [
+                    'email' => [
+                        'required',
+                        'string',
+                        'email',
+                        'max:255',
+                        Rule::exists('users')->where(function ($query) {
+                            $query->where('type', 'cliente');
+                        }),
+                    ],
+                ]);
+            
+                $validator->validate();
             } catch (ValidationException $e) {
                 return response()->json(['message' => $e->getMessage()], $e->status);
             }
@@ -42,24 +56,23 @@ class AuthController extends Controller
         // Verificar que los datos provistos sean los correctos y que
         // efectivamente el usuario se autentique con ellos utilizando
         // los datos de la tabla "users".
-        if (!Auth::guard('customer')->attempt($request->only('email', 'password')) and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
+        if (!Auth::attempt($request->only('email', 'password')) and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
         {
             return response()->json(['message' => 'Invalid login details'], 401);
         }
 
         if ($request['tipo'] == 'customer')
         {     
-            //Auth::shouldUse('customer');
             // Una vez autenticado, obtener la información del usuario en sesión.
             $tokenType = 'Bearer';
-            $customer = Customer::where('email', $request['email'])->firstOrFail();
+            $user = User::where('email', $request['email'])->firstOrFail();
 
             // Borrar los tokens anteriores (tipo Bearer) del usuario para
             // evitar, en este caso, tenga mas de uno del mismo tipo.
-            $customer->tokens()->where('name', $tokenType)->delete();
+            $user->tokens()->where('name', $tokenType)->delete();
 
             // Crear un nuevo token tipo Bearer para el usuario autenticado.
-            $token = $customer->createToken($tokenType);
+            $token = $user->createToken($tokenType);
         }else{
             // Una vez autenticado, obtener la información del usuario en sesión.
             $tokenType = 'Bearer';
