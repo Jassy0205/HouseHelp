@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
-use App\Models\Customer;
-use Illuminate\Http\Request;
-use App\Http\Requests\api\v1\CustomerStoreRequest;
-use App\Http\Requests\api\v1\CustomerUpdateRequest;
+use App\Http\Requests\api\v1\UserStoreRequest;
+use App\Http\Requests\api\v1\UserUpdateRequest;
 use App\Http\Resources\api\v1\CustomerResource;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use App\Models\Customer;
+use App\Models\User;
 
 class CustomerController extends Controller
 {
@@ -26,30 +29,47 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CustomerStoreRequest $request)
+    public function store(UserStoreRequest $request)
     {
-        #$customer = Customer::create($request->all());
+        $email = $request->input('email');
+        $existeUsuario = User::where('email', $email) ->where('type', 'customer') ->exists();
 
-        #return response()->json(['data' => $customer], 200);
+        if ($existeUsuario)
+            return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);
+        else
+        {
+            $user = User::create($request->all());
+            $customer = new Customer();
+
+            $customer['info_personal'] = $user['id'];
+            $customer->user()->associate($user);
+
+            $customer->save();
+
+            return response()->json(['data' => new CustomerResource($customer)], 200);
+        }
     }
-
 
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show()
     {
-        #return response()->json(['data' => new CustomerResource($customer)], 200);
+        $user = Auth::user();
+        $customer = Customer::where('info_personal', $user->id)->first();
+        return response()->json(['data' => new CustomerResource($customer)], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(UserUpdateRequest $request)
     {
-        #$customer -> update($request->all());
-
-        #return response()->json(['data' => $customer], 200);
+        $user = Auth::user();
+        $user -> update($request->all());
+        
+        $customer = Customer::where('info_personal', $user->id)->first();
+        return response()->json(['data' => new CustomerResource($customer)], 200);
     }
 
     /**

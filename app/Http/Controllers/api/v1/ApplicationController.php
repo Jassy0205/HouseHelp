@@ -20,13 +20,13 @@ class ApplicationController extends Controller
      */
     public function index()
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
-
         $atributosPivote = [];
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
+            $customer = Customer::where('info_personal', $user->id)->first();
             foreach ($customer->applications as $app)
             {
                 foreach ($app->suppliers as $sup) {
@@ -38,7 +38,7 @@ class ApplicationController extends Controller
 
             return response()->json(['data' => ApplicationResource::collection($atributosPivote)], 200); 
         }
-        else
+        else if ($supplier != null)
         {
             foreach ($supplier->applications as $app) {
                 $status = $app->pivot->status;
@@ -48,7 +48,11 @@ class ApplicationController extends Controller
             }
 
             return response()->json(['data' => ApplicationResource::collection($atributosPivote)], 200);
-        }
+        }else
+        {
+            $aplicaciones = Application::all();
+            return response()->json(['data' => ApplicationResource::collection($aplicaciones)], 200);
+        }    
     }
 
     /**
@@ -56,14 +60,13 @@ class ApplicationController extends Controller
      */
     public function store(ApplicationStoreRequest $request)
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
-        $supplier = Supplier::where('email', Auth::user()->email)->first();
-
+        $user = Auth::user();
         $application = Application::create($request->all());
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
-            $application['client'] =  $customer["id"];
+            $customer = Customer::where('info_personal', $user->id)->first();
+            $application['client'] = $customer["id"];
             $suppliers = Supplier::all();
 
             foreach ($suppliers as $sup) {
@@ -78,7 +81,8 @@ class ApplicationController extends Controller
 
             $application -> save();
             return response()->json(['data' => new ApplicationResource($application)], 200); 
-        }
+        }else
+            return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);
     }
 
     /**
@@ -86,21 +90,22 @@ class ApplicationController extends Controller
      */
     public function show(Application $application)
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
-            if ($application['client'] ==  $customer["id"])
+            $customer = Customer::where('info_personal', $user->id)->first();
+            if ($application['client'] == $customer["id"])
             {
                 foreach ($application->suppliers as $sup) {
                     $status = $sup->pivot->status;
                 }
 
                 return response()->json(['data' => new ApplicationResource($application)], 200);
-            } 
+            }
         }
-        else
+        else if ($supplier != null)
         {
             foreach ($supplier->applications as $app) {
                 $status = $app->pivot->status;
@@ -108,7 +113,8 @@ class ApplicationController extends Controller
                 if ($status != 'rechazada' and $app['id'] == $application['id'])
                     return response()->json(['data' => new ApplicationResource($app)], 200);
             }
-        }
+        }else
+            return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);
     }
 
     /**
@@ -116,14 +122,28 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, Application $application)
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $usuarioAplicacion = $application->customer->user;
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente' and $user == $usuarioAplicacion)
         {
-            $application -> update($request->all());
-            return response()->json(['data' => new ApplicationResource($application)], 200); 
-        } else
+            try {
+                $request->validate([
+                    'description' => 'nullable|string|max:300|ascii', // Permitir que sea nulo o contener un string válido
+                ]);
+            
+                if ($request->has('description')) {
+                    $application->update(['description' => $request->input('description')]);
+                }
+            
+            } catch (ValidationException $e) {
+                return response()->json(['message' => $e->getMessage()], $e->status);
+            }                
+    
+            return response()->json(['data' => new ApplicationResource($application)], 200);
+
+        } else if ($supplier != null)
         {
             try {
                 $request->validate([
@@ -133,7 +153,6 @@ class ApplicationController extends Controller
                 return response()->json(['message' => $e->getMessage()], $e->status);
             }
             
-            //$supplierApp = SupplierApplication::where('provider' '=' $supplier['id']) -> where('publishing' '=' $application['id']) -> get();
             $application->suppliers()->updateExistingPivot($supplier['id'], ['status' => $request['status']]);
 
             $atributosPivote = null;
@@ -146,7 +165,8 @@ class ApplicationController extends Controller
             }
 
             return response()->json(['data' => ApplicationResource::collection($atributosPivote)], 200);
-        }
+        }else
+            return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);
     }
 
     /**
@@ -154,10 +174,9 @@ class ApplicationController extends Controller
      */
     public function destroy(Application $application)
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
-        $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
             $suppliers = Supplier::all();
 
@@ -168,6 +187,7 @@ class ApplicationController extends Controller
             }
 
             return response()->json(null, 204); 
-        }
+        }else
+            return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);
     }
 }

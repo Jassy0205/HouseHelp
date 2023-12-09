@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\Http\Resources\api\v1\SupplierResource;
 use App\Http\Controllers\Controller;
-use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
@@ -13,7 +14,9 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        //
+        $suppliers = Supplier::orderBy('name', 'asc') -> get();
+
+        return response()->json(['data' => SupplierResource::collection($suppliers)], 200); //Código de respuesta
     }
 
     /**
