@@ -53,6 +53,8 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
+        'checkCustomerLocation' => \App\Http\Middleware\CheckCustomerLocation::class,
+        'checkSupplierLocation' => \App\Http\Middleware\CheckSupplierLocation::class,
         'checkCustomerIdentifier' => \App\Http\Middleware\CheckCustomerIdentifier::class,
         'checkSupplierIdentifier' => \App\Http\Middleware\CheckSupplierIdentifier::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
