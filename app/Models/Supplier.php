@@ -26,6 +26,8 @@ class Supplier extends Authenticatable_2
         'description',
         'phone',
         'email',
+        'suspended',
+        'password',
     ];
 
     /**
@@ -71,5 +73,10 @@ class Supplier extends Authenticatable_2
     public function contracts() : HasMany
     {
         return $this -> HasMany(Contract::class, 'provider');
+    }
+
+    public function verifyingAdministrator() : BelongsTo
+    {
+        return $this->belongsTo(Administrator::class, 'verified_by');
     }
 }

@@ -54,7 +54,7 @@ class SupplierStoreRequest extends FormRequest
             'description.max' => 'El campo descripción debe tener una longitud maxima de 300 dígitos',
 
             'password.required' => 'El campo contraseña es requerido',
-            'password.min' => 'El campo especificaciones debe tener una longitud minima de 8 dígitos',
+            'password.min' => 'El campo contraseña debe tener una longitud minima de 8 dígitos',
         ];
     }
 }

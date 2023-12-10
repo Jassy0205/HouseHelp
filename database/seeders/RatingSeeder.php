@@ -16,14 +16,14 @@ class RatingSeeder extends Seeder
         Rating::unguard(); 
         
         Rating::create([
-            'star' => '5',
+            'star' => 5,
             'comment' => 'Buen servicio',
             'provider' => '1',
             'client' => '3',
         ]);
 
         Rating::create([
-            'star' => '2',
+            'star' => 2,
             'comment' => 'Nunca llegó el encargado',
             'provider' => '2',
             'client' => '1',

@@ -17,12 +17,12 @@ class MessageResource extends JsonResource
         //return parent::toArray($request);
         if ($this->by == "client")
         {
-            $by = $this->customer->name;
+            $by = $this->customer->user->name;
             $to = $this->supplier->name;
         }else
         {
             $by = $this->supplier->name;
-            $to = $this->customer->name;
+            $to = $this->customer->user->name;
         }
 
         return [

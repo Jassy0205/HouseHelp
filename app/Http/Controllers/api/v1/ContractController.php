@@ -2,54 +2,136 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\Controller;
-use App\Models\Contract;
-use Illuminate\Http\Request;
 use App\Http\Requests\api\v1\ContractStoreRequest;
-use App\Http\Requests\api\v1\ContractUpdateRequest;
+use App\Http\Resources\api\v1\ContractAllResource;
 use App\Http\Resources\api\v1\ContractResource;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Models\Customer;
+use App\Models\Supplier;
+use App\Models\Contract;
 
 class ContractController extends Controller
 {
     /**
+     * Display a listing of the resource to admin
+     */
+    public function list()
+    {
+        $contratos = Contract::all();
+        return response()->json(['data' => ContractResource::collection($contratos)], 200);
+    }
+
+    /**
+     * Display the specified resource to admin
+     */
+    public function ShowSinParametros(Contract $contrato)
+    {
+        return response()->json(['data' => new ContractResource($contrato)], 200);
+    }
+
+    /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $id)
     {
-        $contracts = Contract::orderBy('description', 'asc') -> get();
+        $user = Auth::user();
+        $supplier = Supplier::where('email', Auth::user()->email)->first();
 
-        return response()->json(['data' => ContractResource::collection($contracts)], 200); //Código de respuesta
+        if ($user['type'] == 'cliente')
+        {
+            $customer = Customer::where('info_personal', $user->id)->first();
+            $contratos = $customer->contracts->where('provider', $id);
+            return response()->json(['data' => ContractAllResource::collection($contratos)], 200); 
+        }
+        else if ($supplier != null)
+        {
+            $contratos = $supplier->contracts->where('client', $id);
+            return response()->json(['data' => ContractAllResource::collection($contratos)], 200); 
+        }   
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(string $id, ContractStoreRequest $request)
     {
-        //
+        $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $customer = Customer::find($id);
+
+        if ($customer != null)
+        {
+            $contrato = Contract::create($request->all());
+
+            $contrato['provider'] = $supplier["id"];
+            $contrato['client'] = $id;
+
+            $contrato -> save();
+            return response()->json(['data' => new ContractResource($contrato)], 200);
+        }else
+            return response()->json(null, 404);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(string $id, string $idcontrato)
     {
-        //
+        $user = Auth::user();
+        $supplier = Supplier::where('email', Auth::user()->email)->first();
+
+        if ($user['type'] == 'cliente')
+        {
+            $contrato = Contract::where('provider', $id)->where('id', $idcontrato)->first();
+            $customer = Customer::where('info_personal', $user->id)->first();
+
+            if ($contrato['client'] == $customer['id'])
+                return response()->json(['data' => new ContractResource($contrato)], 200);
+        }
+        else if ($supplier != null)
+        {
+            $contrato = Contract::where('client', $id)->where('id', $idcontrato)->first();
+            if ($contrato['provider'] == $supplier['id'])
+                return response()->json(['data' => new ContractResource($contrato)], 200);   
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(string $id, Request $request, string $idcontrato)
     {
-        //
+        $user = Auth::user();
+        $contrato = Contract::where('provider', $id)->where('id', $idcontrato)->first();
+
+        if ($user['type'] == 'cliente' and $contrato['provider'] == $id)
+        {
+            $customer = Customer::where('info_personal', $user->id)->first();
+
+            try {
+                $request->validate([
+                    'status' => 'required|ascii|in:aceptado,rechazado,en revision', // Permitir que sea nulo o contener un string válido
+                ]);
+            
+                if ($request->has('status') and $contrato['status'] == 'en revision') {
+                    $contrato->update(['status' => $request->input('status')]);
+                    return response()->json(['data' => new ContractAllResource($contrato)], 200);
+                }
+            
+            } catch (ValidationException $e) {
+                return response()->json(['message' => $e->getMessage()], $e->status);
+            }    
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(string $idcontrato)
     {
-        //
+        $contrato = Contract::where('id', $idcontrato)->first();
+        $contrato -> delete();
+        return response()->json(null, 204);
     }
 }

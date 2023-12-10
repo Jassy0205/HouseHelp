@@ -18,9 +18,9 @@ class ContractResource extends JsonResource
             'code' => $this->id,
             'Asunto' => 'Contrato laboral',
             'Lugar de efecto' => $this->customer->location->department. ' - ' .$this->customer->location->city,
-            'content'  => 'Este contrato de '. $this->description .', celebrado el'. $this->created_at .' entre'. $this->supplier->name. 
+            'content'  => 'Este contrato de '. $this->description .', celebrado el '. $this->created_at .' entre '. $this->supplier->name. 
                     ' y la/el señor(a) ' .$this->customer->name. ' '. $this->customer->lastname.' identificad@ con número de cédula '.
-                    $this->customer->identification_card. ' por el valor de '.$this->price,
+                    $this->customer->user->identification_card. ' por el valor de '.$this->price,
         ];
     }
 }

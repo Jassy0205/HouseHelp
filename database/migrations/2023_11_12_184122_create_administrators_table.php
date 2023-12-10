@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('administrators', function (Blueprint $table) {
             $table->id();
-            $table->enum('verification', ['verificado', 'sin verificar']);
 
             $table->foreignId('info_personal')->nullable()->unique();
             $table->foreign('info_personal')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();
-
-            $table->foreignId('home')->nullable();
-            $table->foreign('home')->references('id')->on('locations')->nullOnDelete()->cascadeOnUpdate();
-
-            $table->foreignId('verified_by')->nullable()->constrained('administrators');
         });
     }
 
@@ -30,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('administrators');
     }
 };

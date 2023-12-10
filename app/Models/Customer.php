@@ -20,9 +20,15 @@ class Customer extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'identity_verified'
     ];
 
     public $timestamps = false;
+
+    public function location() : BelongsTo
+    {
+        return $this -> belongsTo(Location::class, 'home');
+    }
 
     public function user() : BelongsTo
     {
@@ -47,5 +53,10 @@ class Customer extends Model
     public function contracts() : HasMany
     {
         return $this -> HasMany(Contract::class, 'client');
+    }
+
+    public function verifyingAdministrator() : BelongsTo
+    {
+        return $this->belongsTo(Administrator::class, 'verified_by');
     }
 }

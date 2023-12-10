@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('description', 500);
             $table->integer('price');
+            $table->enum('status', ['en revision', 'aceptado', 'rechazado']);
             $table->timestamps();
 
             $table->foreignId('provider')->nullable();

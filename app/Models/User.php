@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
@@ -29,6 +29,7 @@ class User extends Authenticatable
         'email',
         'age',
         'gender',
+        'type'
     ];
 
     /**
@@ -51,13 +52,33 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function location() : BelongsTo
+    /**
+     * Check if the user has the administrator role.
+     *
+     * @return bool
+     */
+    public function isAdmin()
     {
-        return $this -> belongsTo(Location::class, 'home');
+        return $this->type == 'admin';
     }
 
-    public function customers() : HasMany
+    /**
+     * Check if the user has the administrator role.
+     *
+     * @return bool
+     */
+    public function isCustomer()
     {
-        return $this -> HasMany(Customer::class, 'info_personal');
+        return $this->type == 'cliente';
+    }
+
+    public function customer() : HasOne
+    {
+        return $this -> HasOne(Customer::class, 'info_personal');
+    }
+
+    public function administrator() : HasOne
+    {
+        return $this -> HasOne(Administrator::class, 'info_personal');
     }
 }

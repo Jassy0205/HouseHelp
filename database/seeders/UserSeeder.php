@@ -25,7 +25,6 @@ class UserSeeder extends Seeder
             'gender' => 'F',
             'type' => 'cliente',
             'password' => 'hola123',
-            'home' => '1'
         ]);
 
         User::create([
@@ -38,7 +37,6 @@ class UserSeeder extends Seeder
             'gender' => 'M',
             'type' => 'cliente',
             'password' => 'hola123',
-            'home' => '1'
         ]);
 
         User::create([
@@ -51,7 +49,18 @@ class UserSeeder extends Seeder
             'gender' => 'M',
             'type' => 'cliente',
             'password' => 'hola123',
-            'home' => '3'
+        ]);
+
+        User::create([
+            'identification_card' => '12515545',
+            'name' => 'Susana',
+            'lastname' => 'Martinez Peña',
+            'phone' => "3143015393",
+            'email' => 'susana.martinezp@gmail.com',
+            'age' => 40,
+            'gender' => 'F',
+            'type' => 'admin',
+            'password' => 'hola123',
         ]);
 
         User::reguard();

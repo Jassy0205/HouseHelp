@@ -25,9 +25,6 @@ return new class extends Migration
 
             $table->string('password');
             $table->rememberToken();
-
-            $table->foreignId('home')->nullable();
-            $table->foreign('home')->references('id')->on('locations')->nullOnDelete()->cascadeOnUpdate();
         });
     }
 

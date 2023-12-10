@@ -18,28 +18,25 @@ class ApplicationResource extends JsonResource
     public function toArray(Request $request): array
     {
         //return parent::toArray($request);
-
-        $customer = Customer::where('email', Auth::user()->email)->first();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        return [
+            'code' => $this->id,
+            'status' => $this->resolucion,
+            'description' => $this->description,
+            'by' => $this->customer->user->name . ' '. $this->customer->user->lastname,
+            'creation_date' => $this->updated_at,
+        ];
 
         if ($supplier != null)
         {
             $status = $this->pivot->status;
 
             return [
-                'code' => $this->id,
-                'description' => $this->description,
-                'by' => $this->customer->name . ' '. $this->customer->lastname,
-                'creation_date' => $this->updated_at,
                 'status' => $status,
             ];
         }else
         {
             return [
-                'code' => $this->id,
-                'description' => $this->description,
-                'by' => $this->customer->name . ' '. $this->customer->lastname,
-                'creation_date' => $this->updated_at,
                 'suppliers' => SupplierCustomerResource::collection($this->suppliers), 
             ];
         }

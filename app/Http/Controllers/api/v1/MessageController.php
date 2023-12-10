@@ -18,16 +18,17 @@ class MessageController extends Controller
      * Display a listing of the resource.
      */
     public function index(string $id)
-    {    
-        $customer = Customer::where('email', Auth::user()->email)->first();
+    {   
+        $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
+            $customer = Customer::where('info_personal', $user->id)->first();
             $messages = Message::where('client', '=', $customer["id"]) -> where('provider', '=', $id) -> get();
             return response()->json(['data' => MessageResource::collection($messages)], 200); 
         }
-        else
+        else if($supplier != null)
         {
             $messages = Message::where('provider', '=', $supplier["id"]) -> where('client', '=', $id) -> get();
             return response()->json(['data' => MessageResource::collection($messages)], 200); 
@@ -39,13 +40,15 @@ class MessageController extends Controller
      */
     public function store(string $id, MessageStoreRequest $request)
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
+            $customer = Customer::where('info_personal', $user->id)->first();
+
             $message = Message::create($request->all());
-            $message['by'] = "1";
+            $message['by'] = "client";
             $message['provider'] = $id;
             $message['client'] = $customer["id"];
 
@@ -53,10 +56,10 @@ class MessageController extends Controller
 
             return response()->json(['data' => new MessageResource($message)], 200); 
         }
-        else
+        else if ($supplier != null)
         {
             $message = Message::create($request->all());
-            $message['by'] = "2";
+            $message['by'] = "provider";
             $message['provider'] = $supplier["id"];
             $message['client'] = $id;
 
@@ -71,15 +74,16 @@ class MessageController extends Controller
      */
     public function show(string $id, Message $message)
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
+            $customer = Customer::where('info_personal', $user->id)->first();
             if ($message['provider'] == $id and $message['client'] == $customer["id"])
                 return response()->json(['data' => new MessageResource($message)], 200);
         }
-        else
+        else if ($supplier != null)
         {
             if ($message['client'] == $id and $message['provider'] == $supplier["id"])
                 return response()->json(['data' => new MessageResource($message)], 200);
@@ -99,11 +103,12 @@ class MessageController extends Controller
      */
     public function destroy(string $id, Message $message)
     {
-        $customer = Customer::where('email', Auth::user()->email)->first();
+        $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
 
-        if ($supplier == null)
+        if ($user['type'] == 'cliente')
         {
+            $customer = Customer::where('info_personal', $user->id)->first();
             if ($message['provider'] == $id and $message['client'] == $customer["id"])
             {
                 $message -> delete();
@@ -112,7 +117,7 @@ class MessageController extends Controller
                 return response()->json(null, 404);
             }
         }
-        else
+        else if($supplier != null)
         {
             if ($message['client'] == $id and $message['provider'] == $supplier["id"])
             {
