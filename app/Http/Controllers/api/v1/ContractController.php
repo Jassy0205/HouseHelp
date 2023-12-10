@@ -26,8 +26,9 @@ class ContractController extends Controller
     /**
      * Display the specified resource to admin
      */
-    public function ShowSinParametros(Contract $contrato)
+    public function ShowSinParametros(string $idcontrato)
     {
+        $contrato = Contract::where('id', $idcontrato)->first();
         return response()->json(['data' => new ContractResource($contrato)], 200);
     }
 

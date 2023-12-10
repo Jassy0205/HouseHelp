@@ -57,9 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware(['checkAdminIdentifier'])->group(function () {
         // Definir rutas para las funciones de administración aquí
-        //Route::singleton('/v1/supplier/profile', App\Http\Controllers\api\v1\AdministratorController::class);
-        //Route::apiResource('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class)->only(['index', 'show']);
-        Route::apiResource('/v1/contracts', App\Http\Controllers\api\v1\ContractController::class)->only(['list', 'ShowSinParametros']);
+        Route::singleton('/v1/Administrator/profile', App\Http\Controllers\api\v1\AdministratorController::class);
+        Route::get('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class);
+        Route::get('/v1/contracts', App\Http\Controllers\api\v1\ContractController::class);
     });
 
     Route::apiResource('/v1/suppliers', App\Http\Controllers\api\v1\SupplierController::class)->only(['index'])->middleware('checkCustomerIdentifier', 'checkAdminIdentifier');

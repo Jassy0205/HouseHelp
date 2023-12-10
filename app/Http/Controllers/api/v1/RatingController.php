@@ -62,24 +62,45 @@ class RatingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, Rating $rating)
+    public function show(string $id, string $idrating)
     {
-        //
+        $rating = Rating::where('id', $idrating)->where('provider', $id)->first();
+        
+        return response()->json(['data' => new RatingResource($rating)], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Rating $rating)
+    public function update(string $id, RatingUpdateRequest $request, string $idrating)
     {
-        //
+        $user = Auth::user();
+
+        if ($user['type'] == 'cliente')
+        {
+            $customer = Customer::where('info_personal', $user->id)->first();
+            
+            $rating = Rating::where('id', $idrating)->where('client', $customer['id'])->where('provider', $id)->first();
+            $rating -> update($request->all());
+
+            return response()->json(['data' => new RatingResource($rating)], 200);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(string $idrating)
     {
-        //
+        $user = Auth::user();
+
+        if ($user['type'] == 'cliente')
+        {
+            $customer = Customer::where('info_personal', $user->id)->first();
+            $rating = Rating::where('id', $idrating)->where('client', $customer['id'])->first();
+
+            $rating -> delete();
+            return response()->json(null, 204);
+        }
     }
 }
