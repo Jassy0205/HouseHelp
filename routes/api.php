@@ -57,5 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Admin- Route::apiResource('/v1/contracts', App\Http\Controllers\api\v1\ContractController::class)->only(['list', 'ShowSinParametros']);
     //Admin- Route::apiResource('/v1/customers', App\Http\Controllers\api\v1\CustomerController::class)->only(['index']);
+
+    Route::middleware(['auth', 'admin'])->group(function () {
+        // Definir rutas para las funciones de administración aquí
+    });
 }
 ); 

@@ -53,4 +53,9 @@ class Customer extends Model
     {
         return $this -> HasMany(Contract::class, 'client');
     }
+
+    public function verifyingAdministrator() : BelongsTo
+    {
+        return $this->belongsTo(Administrator::class, 'verified_by');
+    }
 }

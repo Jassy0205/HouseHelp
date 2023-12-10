@@ -72,4 +72,9 @@ class Supplier extends Authenticatable_2
     {
         return $this -> HasMany(Contract::class, 'provider');
     }
+
+    public function verifyingAdministrator() : BelongsTo
+    {
+        return $this->belongsTo(Administrator::class, 'verified_by');
+    }
 }
