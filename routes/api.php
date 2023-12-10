@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('checkCustomerIdentifier')->group(function () {
         Route::apiResource('/v1/profile', App\Http\Controllers\api\v1\CustomerController::class)->except(['index', 'store']);
-        Route::apiResource('/v1/suppliers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class);
+        Route::apiResource('/v1/suppliers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
         Route::apiResource('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class)->except(['list']);
         Route::apiResource('/v1/suppliers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['store', 'destroy']);
         Route::apiResource('/v1/suppliers', App\Http\Controllers\api\v1\SupplierController::class)->only(['index']);
@@ -41,12 +41,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('checkSupplierIdentifier')->group(function () {
         Route::apiResource('/v1/profile', App\Http\Controllers\api\v1\SupplierController::class)->except(['index', 'store']);
         Route::apiResource('/v1/customers', App\Http\Controllers\api\v1\CustomerController::class)->only(['index']);
-        Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class);
+        Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
         Route::apiResource('/v1/ratings', App\Http\Controllers\api\v1\RatingController::class)->only(['list']);
         Route::apiResource('/v1/customers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['update']);
     });    
     
-    Route::apiResource('/v1/locations', App\Http\Controllers\api\v1\LocationController::class);
+    Route::apiResource('/v1/locations', App\Http\Controllers\api\v1\LocationController::class)->only(['store', 'show', 'update']);
     Route::apiResource('/v1/applications', App\Http\Controllers\api\v1\ApplicationController::class);
 
     //Admin- Route::apiResource('/v1/contracts', App\Http\Controllers\api\v1\ContractController::class)->only(['list', 'ShowSinParametros']);

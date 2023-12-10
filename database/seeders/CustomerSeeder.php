@@ -17,14 +17,17 @@ class CustomerSeeder extends Seeder
 
         Customer::create([
             'info_personal' => '1',
+            'home' => '1',
         ]);
 
         Customer::create([
             'info_personal' => '2',
+            'home' => '1',
         ]);
 
         Customer::create([
             'info_personal' => '3',
+            'home' => '3',
         ]);
 
         Customer::reguard();

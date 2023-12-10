@@ -52,11 +52,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function location() : BelongsTo
-    {
-        return $this -> belongsTo(Location::class, 'home');
-    }
-
     public function customers() : HasMany
     {
         return $this -> HasMany(Customer::class, 'info_personal');

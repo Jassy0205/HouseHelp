@@ -24,6 +24,11 @@ class Customer extends Model
 
     public $timestamps = false;
 
+    public function location() : BelongsTo
+    {
+        return $this -> belongsTo(Location::class, 'home');
+    }
+
     public function user() : BelongsTo
     {
         return $this -> belongsTo(User::class, 'info_personal');

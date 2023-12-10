@@ -25,7 +25,6 @@ class UserSeeder extends Seeder
             'gender' => 'F',
             'type' => 'cliente',
             'password' => 'hola123',
-            'home' => '1'
         ]);
 
         User::create([
@@ -38,7 +37,6 @@ class UserSeeder extends Seeder
             'gender' => 'M',
             'type' => 'cliente',
             'password' => 'hola123',
-            'home' => '1'
         ]);
 
         User::create([
@@ -51,7 +49,6 @@ class UserSeeder extends Seeder
             'gender' => 'M',
             'type' => 'cliente',
             'password' => 'hola123',
-            'home' => '3'
         ]);
 
         User::reguard();

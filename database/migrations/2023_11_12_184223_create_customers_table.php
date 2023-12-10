@@ -17,6 +17,9 @@ return new class extends Migration
 
             $table->foreignId('info_personal')->nullable()->unique();
             $table->foreign('info_personal')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();
+
+            $table->foreignId('home')->nullable();
+            $table->foreign('home')->references('id')->on('locations')->nullOnDelete()->cascadeOnUpdate();
         });
     }
 

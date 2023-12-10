@@ -28,7 +28,7 @@ class CustomerResource extends JsonResource
             'phone' => $user->phone,
             'gender' => $user->gender,
             'creation_date' => $user->updated_at,
-            'home' => new LocationResource($user->location)
+            'home' => new LocationResource($this->location)
         ];
     }
 }
