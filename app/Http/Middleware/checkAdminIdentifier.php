@@ -13,8 +13,14 @@ class checkAdminIdentifier
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    // Ejemplo de middleware para verificar el rol de administrador
+    public function handle($request, Closure $next)
     {
-        return $next($request);
+        if (auth()->user()->isAdmin()) {
+            return $next($request);
+        }
+
+        abort(403, 'No tienes permisos para acceder a esta página.');
     }
+
 }

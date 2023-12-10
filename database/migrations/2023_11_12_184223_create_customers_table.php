@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->foreignId('info_personal')->nullable()->unique();
             $table->foreign('info_personal')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('verified_by')->constrained('administrators');
         });
     }
 
