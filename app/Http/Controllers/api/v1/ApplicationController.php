@@ -41,10 +41,13 @@ class ApplicationController extends Controller
         else if ($supplier != null)
         {
             foreach ($supplier->applications as $app) {
-                $status = $app->pivot->status;
+                if ($app->isPendiente())
+                {
+                    $status = $app->pivot->status;
 
-                if ($status != 'rechazada')
-                    $atributosPivote[] = $app;
+                    if ($status != 'rechazada')
+                        $atributosPivote[] = $app;
+                }
             }
 
             return response()->json(['data' => ApplicationResource::collection($atributosPivote)], 200);
@@ -108,9 +111,10 @@ class ApplicationController extends Controller
         else if ($supplier != null)
         {
             foreach ($supplier->applications as $app) {
+
                 $status = $app->pivot->status;
 
-                if ($status != 'rechazada' and $app['id'] == $application['id'])
+                if ($status != 'rechazada' and $app['id'] == $application['id'] and $app->isPendiente())
                     return response()->json(['data' => new ApplicationResource($app)], 200);
             }
         }else
@@ -126,15 +130,19 @@ class ApplicationController extends Controller
         $supplier = Supplier::where('email', Auth::user()->email)->first();
         $usuarioAplicacion = $application->customer->user;
 
-        if ($user['type'] == 'cliente' and $user == $usuarioAplicacion)
+        if ($user['type'] == 'cliente' and $user['id'] == $usuarioAplicacion['id'])
         {
             try {
                 $request->validate([
                     'description' => 'nullable|string|max:300|ascii', // Permitir que sea nulo o contener un string válido
+                    'resolucion' => 'nullable|string|ascii|in:pendiente,resuelta'
                 ]);
             
                 if ($request->has('description')) {
                     $application->update(['description' => $request->input('description')]);
+                }
+                if ($request->has('resolucion')) {
+                    $application->update(['resolucion' => $request->input('resolucion')]);
                 }
             
             } catch (ValidationException $e) {
@@ -175,8 +183,9 @@ class ApplicationController extends Controller
     public function destroy(Application $application)
     {
         $user = Auth::user();
+        $usuarioAplicacion = $application->customer->user;
 
-        if ($user['type'] == 'cliente')
+        if ($user['type'] == 'cliente' and $user['id'] == $usuarioAplicacion['id'])
         {
             $suppliers = Supplier::all();
 

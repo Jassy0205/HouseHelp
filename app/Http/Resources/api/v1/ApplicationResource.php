@@ -19,25 +19,24 @@ class ApplicationResource extends JsonResource
     {
         //return parent::toArray($request);
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        return [
+            'code' => $this->id,
+            'status' => $this->resolucion,
+            'description' => $this->description,
+            'by' => $this->customer->user->name . ' '. $this->customer->user->lastname,
+            'creation_date' => $this->updated_at,
+        ];
 
         if ($supplier != null)
         {
             $status = $this->pivot->status;
 
             return [
-                'code' => $this->id,
-                'description' => $this->description,
-                'by' => $this->customer->user->name . ' '. $this->customer->user->lastname,
-                'creation_date' => $this->updated_at,
                 'status' => $status,
             ];
         }else
         {
             return [
-                'code' => $this->id,
-                'description' => $this->description,
-                'by' => $this->customer->user->name . ' '. $this->customer->user->lastname,
-                'creation_date' => $this->updated_at,
                 'suppliers' => SupplierCustomerResource::collection($this->suppliers), 
             ];
         }

@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Requests\api\v1\UserStoreRequest;
 use App\Http\Requests\api\v1\UserUpdateRequest;
 use App\Http\Resources\api\v1\CustomerResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\User;
@@ -31,23 +29,7 @@ class CustomerController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        $email = $request->input('email');
-        $existeUsuario = User::where('email', $email) ->where('type', 'customer') ->exists();
 
-        if ($existeUsuario)
-            return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);
-        else
-        {
-            $user = User::create($request->all());
-            $customer = new Customer();
-
-            $customer['info_personal'] = $user['id'];
-            $customer->user()->associate($user);
-
-            $customer->save();
-
-            return response()->json(['data' => new CustomerResource($customer)], 200);
-        }
     }
 
     /**

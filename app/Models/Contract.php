@@ -13,6 +13,7 @@ class Contract extends Model
     protected $fillable = [
         'description',
         'price',
+        'status',
     ];
 
     public function supplier() : BelongsTo

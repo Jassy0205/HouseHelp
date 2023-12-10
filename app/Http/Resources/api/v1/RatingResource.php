@@ -16,10 +16,11 @@ class RatingResource extends JsonResource
     {
         //return parent::toArray($request);
         return [
-            'id ' => $this->id. ', To: '. $this->provider,
-            'n' => $this->start. ': '. $this->comment,
-            'by' => $this->client,
-            'creation_date' => $this->updated_at,
+            'id ' => $this->id,
+            'To' => $this->supplier->name. ' - '. $this->supplier->email,
+            'rating' => $this->star. ' estrellas: '. $this->comment,
+            'by' => $this->customer->user->name. ' '. $this->customer->user->lastname,
+            'creation_date' => $this->updated_at->format('Y-m-d'),
         ];
     }
 }

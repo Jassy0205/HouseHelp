@@ -51,6 +51,18 @@ class UserSeeder extends Seeder
             'password' => 'hola123',
         ]);
 
+        User::create([
+            'identification_card' => '12515545',
+            'name' => 'Susana',
+            'lastname' => 'Martinez Peña',
+            'phone' => "3143015393",
+            'email' => 'susana.martinezp@gmail.com',
+            'age' => 40,
+            'gender' => 'F',
+            'type' => 'admin',
+            'password' => 'hola123',
+        ]);
+
         User::reguard();
     }
 }

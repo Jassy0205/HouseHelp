@@ -46,8 +46,9 @@ class MessageController extends Controller
         if ($user['type'] == 'cliente')
         {
             $customer = Customer::where('info_personal', $user->id)->first();
+
             $message = Message::create($request->all());
-            $message['by'] = "1";
+            $message['by'] = "client";
             $message['provider'] = $id;
             $message['client'] = $customer["id"];
 
@@ -58,7 +59,7 @@ class MessageController extends Controller
         else if ($supplier != null)
         {
             $message = Message::create($request->all());
-            $message['by'] = "2";
+            $message['by'] = "provider";
             $message['provider'] = $supplier["id"];
             $message['client'] = $id;
 

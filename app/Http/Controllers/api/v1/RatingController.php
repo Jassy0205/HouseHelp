@@ -33,7 +33,7 @@ class RatingController extends Controller
         
         if ($supplier != null)
         {
-            $ratings = $supplier->$ratings;
+            $ratings = $supplier->ratings;
             return response()->json(['data' => RatingResource::collection($ratings)], 200); //Código de respuesta
         }
     }
@@ -49,8 +49,8 @@ class RatingController extends Controller
         if($existeSupplier)
         {
             $rating = Rating::create($request->all());
-            $rating['customer'] = $user["id"];
-            $rating['supplier'] = $id;
+            $rating['client'] = $user["id"];
+            $rating['provider'] = $id;
 
             $rating -> save();
 

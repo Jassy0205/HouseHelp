@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('administrators', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+            $table->foreignId('info_personal')->nullable()->unique();
+            $table->foreign('info_personal')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();
         });
     }
 

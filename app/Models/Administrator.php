@@ -21,43 +21,9 @@ class Administrator extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
-
-    /**
-     * Check if the user has the administrator role.
-     *
-     * @return bool
-     */
-    public function isAdmin()
-    {
-        // Implement your logic to check if the user has the administrator role.
-        // This could involve checking a 'role' column in your administrators table.
-        // For example:
-        return $this->type === 'admin';
-    }
+    public $timestamps = false;
 
     public function user() : BelongsTo
     {

@@ -4,7 +4,8 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Requests\api\v1\LocationStoreRequest;
 use App\Http\Requests\api\v1\LocationUpdateRequest;
-use App\Http\Resources\api\v1\LocationResource;
+use App\Http\Resources\api\v1\MyLocationResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\location;
@@ -37,20 +38,22 @@ class LocationController extends Controller
             if ($customer['home'] == null)
             {
                 $location = Location::create($request->all());
-                $location->customer()->associate($customer);
                 $location->save();
 
-                return response()->json(['data' => new LocationResource($location)], 200);
+                $customer['home'] = $location['id'];
+                $customer->save();
+                return response()->json(['data' => new MyLocationResource($location)], 200);
             }
         }else if($supplier != null)
         {
             if ($supplier['company'] == null)
             {
                 $location = Location::create($request->all());
-                $location->suppliers()->associate($supplier);
                 $location->save();
 
-                return response()->json(['data' => new LocationResource($location)], 200);
+                $supplier['company'] = $location['id'];
+                $supplier->save();
+                return response()->json(['data' => new MyLocationResource($location)], 200);
             }
         }
     }
@@ -69,14 +72,14 @@ class LocationController extends Controller
             if ($customer['home'] != null)
             {
                 $location = Location::find($customer['home']);
-                return response()->json(['data' => new LocationResource($location)], 200);
+                return response()->json(['data' => new MyLocationResource($location)], 200);
             }
         }else if($supplier != null)
         {
             if ($supplier['company'] != null)
             {
                 $location = Location::find($supplier['company']);
-                return response()->json(['data' => new LocationResource($location)], 200);
+                return response()->json(['data' => new MyLocationResource($location)], 200);
             }
         }
     }
@@ -97,7 +100,7 @@ class LocationController extends Controller
                 $location = Location::find($customer['home']);
                 $location -> update($request->all());
                 
-                return response()->json(['data' => new LocationResource($location)], 200);
+                return response()->json(['data' => new MyLocationResource($location)], 200);
             }
         }else if($supplier != null)
         {
@@ -106,7 +109,7 @@ class LocationController extends Controller
                 $location = Location::find($supplier['company']);
                 $location -> update($request->all());
 
-                return response()->json(['data' => new LocationResource($location)], 200);
+                return response()->json(['data' => new MyLocationResource($location)], 200);
             }
         }
     }
@@ -114,8 +117,30 @@ class LocationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Location $location)
     {
-        //
+        $user = Auth::user();
+        $supplier = Supplier::where('email', Auth::user()->email)->first();
+
+        if ($user['type'] == 'cliente')
+        {
+            $customer = Customer::where('info_personal', $user->id)->first();
+            if ($customer['home'] != null)
+            {
+                $location = Location::find($customer['home']);
+                $location -> delete();
+                
+                return response()->json(null, 204);
+            }
+        }else if($supplier != null)
+        {
+            if ($supplier['company'] != null)
+            {
+                $location = Location::find($supplier['company']);
+                $location -> delete();
+
+                return response()->json(null, 204);
+            }
+        }
     }
 }
