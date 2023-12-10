@@ -27,6 +27,7 @@ class Supplier extends Authenticatable_2
         'phone',
         'email',
         'suspended',
+        'password',
     ];
 
     /**

@@ -22,7 +22,7 @@ class ContractStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'price' => 'required|digits:5,8|decimal:1,3',
+            'price' => 'required|numeric|between:10000,99999999.999',
             'description' => 'required|max:500|min:10|string|ascii',
         ];
     }

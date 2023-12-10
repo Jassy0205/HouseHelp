@@ -5,7 +5,7 @@ namespace App\Http\Resources\api\v1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ContractAllResource extends JsonResource
+class MyLocationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,12 @@ class ContractAllResource extends JsonResource
     {
         return [
             'code' => $this->id,
-            'Asunto' => 'Contrato laboral: ' . $this->description,
-            'Client' => $this->customer->user->name. ' '. $this->customer->user->lastname,
-            'Provider' => $this->supplier->name,
-            'creation_date' => $this->created_at,
-            'status' => $this->status,
+            'department'  => $this->department,
+            'city' => $this->city,
+            'address'  => $this->address,
+            'neighborhood' => $this->neighborhood,
+            'specifications' => $this->specifications,
+            'created_at' => $this->updated_at,
         ];
     }
 }

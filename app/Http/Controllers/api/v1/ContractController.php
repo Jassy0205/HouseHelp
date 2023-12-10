@@ -76,62 +76,62 @@ class ContractController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, Contract $contrato)
+    public function show(string $id, string $idcontrato)
     {
         $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
 
         if ($user['type'] == 'cliente')
         {
+            $contrato = Contract::where('provider', $id)->where('id', $idcontrato)->first();
             $customer = Customer::where('info_personal', $user->id)->first();
 
-            if ($contrato['client'] == $customer['client'] and $contrato['provider'] == $id)
+            if ($contrato['client'] == $customer['id'])
                 return response()->json(['data' => new ContractResource($contrato)], 200);
         }
         else if ($supplier != null)
         {
-            if ($contrato['client'] == $id and $contrato['provider'] == $supplier['id'])
-                return response()->json(['data' => new ContractResource($contrato)], 200);
+            $contrato = Contract::where('client', $id)->where('id', $idcontrato)->first();
+            if ($contrato['provider'] == $supplier['id'])
+                return response()->json(['data' => new ContractResource($contrato)], 200);   
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(string $id, Request $request, Contract $contrato)
+    public function update(string $id, Request $request, string $idcontrato)
     {
         $user = Auth::user();
+        $contrato = Contract::where('provider', $id)->where('id', $idcontrato)->first();
+
         if ($user['type'] == 'cliente' and $contrato['provider'] == $id)
         {
             $customer = Customer::where('info_personal', $user->id)->first();
 
             try {
                 $request->validate([
-                    'status' => 'nullable|in:aceptado,rechazado,en revision', // Permitir que sea nulo o contener un string válido
+                    'status' => 'required|ascii|in:aceptado,rechazado,en revision', // Permitir que sea nulo o contener un string válido
                 ]);
             
                 if ($request->has('status') and $contrato['status'] == 'en revision') {
                     $contrato->update(['status' => $request->input('status')]);
+                    return response()->json(['data' => new ContractAllResource($contrato)], 200);
                 }
             
             } catch (ValidationException $e) {
                 return response()->json(['message' => $e->getMessage()], $e->status);
             }    
-
-            return response()->json(['data' => new ContractResource($contrato)], 200);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id, Contract $contrato)
+    public function destroy(string $idcontrato)
     {
-        if ($contrato['client'] == $id)
-        {
-            $contrato -> delete();
-            return response()->json(null, 204);
-        }else
-            return response()->json(null, 404);
+        $contrato = Contract::where('id', $idcontrato)->first();
+        $contrato -> delete();
+        return response()->json(null, 204);
     }
 }

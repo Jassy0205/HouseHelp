@@ -21,47 +21,48 @@ Route::middleware('auth:sanctum')->get('/user', function () {
 
 Route::post('/v1/login', [App\Http\Controllers\api\v1\AuthController::class, 'login'])->name('api.login');
 
-Route::post('/v1/registro', [App\Http\Controllers\api\v1\CustomerController::class, 'store'])->name('api.creation_customer');
-Route::post('/v1/registro_2', [App\Http\Controllers\api\v1\SupplierController::class, 'store'])->name('api.creation_supplier');
+Route::post('/v1/register/customer', [App\Http\Controllers\api\v1\AuthController::class, 'registerCustomer'])->name('api.creation_customer');
+Route::post('/v1/register/supplier', [App\Http\Controllers\api\v1\AuthController::class, 'registerSupplier'])->name('api.creation_supplier');
 
 
 Route::middleware('auth:sanctum')->group(function () {
     //ruta para el CRUD de usuarios
 
     Route::post('/v1/logout', [App\Http\Controllers\api\v1\AuthController::class, 'logout'])->name('api.logout');
-    Route::apiResource('/v1/locations', App\Http\Controllers\api\v1\LocationController::class)->only(['store', 'show', 'update']);
+    Route::singleton('/v1/location', App\Http\Controllers\api\v1\LocationController::class);
+    Route::post('/v1/location', [App\Http\Controllers\api\v1\LocationController::class, 'store']);
     Route::apiResource('/v1/applications', App\Http\Controllers\api\v1\ApplicationController::class);
 
     Route::middleware('checkCustomerIdentifier')->group(function () {
         //Se definen las rutas a las que tiene acceso customer
-        Route::apiResource('/v1/profile', App\Http\Controllers\api\v1\CustomerController::class)->except(['show', 'update']);
+        Route::singleton('/v1/customer/profile', App\Http\Controllers\api\v1\CustomerController::class);
         //Se definen las rutas a las que tiene acceso customer una vez haya ingresado su dirección residencial
         Route::middleware('checkCustomerLocation')->group(function () {
             Route::apiResource('/v1/suppliers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
             Route::apiResource('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class)->except(['list']);
             Route::apiResource('/v1/suppliers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['store', 'destroy']);
-            Route::apiResource('/v1/suppliers', App\Http\Controllers\api\v1\SupplierController::class)->only(['index']);
         });
     }); 
     
     Route::middleware('checkSupplierIdentifier')->group(function () {
         //Se definen las rutas a las que tiene acceso supplier
-        Route::apiResource('/v1/profile', App\Http\Controllers\api\v1\SupplierController::class)->except(['show', 'update']);
+        Route::singleton('/v1/supplier/profile', App\Http\Controllers\api\v1\SupplierController::class);//->only(['show', 'update']);
         //Se definen las rutas a las que tiene acceso supplier una vez haya ingresado la dirección del establecimiento
         Route::middleware('checkSupplierLocation')->group(function () {
-            Route::apiResource('/v1/customers', App\Http\Controllers\api\v1\CustomerController::class)->only(['index']);
-            Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
-            Route::apiResource('/v1/ratings', App\Http\Controllers\api\v1\RatingController::class)->only(['list']);
-            Route::apiResource('/v1/customers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['update']);
+           Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
+            Route::get('/v1/ratings', [App\Http\Controllers\api\v1\RatingController::class, 'list']);
+            Route::apiResource('/v1/customers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['update', 'destroy']);
         });
     });    
 
-    Route::middleware(['auth', 'admin'])->group(function () {
+    Route::middleware(['checkAdminIdentifier'])->group(function () {
         // Definir rutas para las funciones de administración aquí
-        Route::apiResource('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class)->only(['index', 'show']);
+        //Route::singleton('/v1/supplier/profile', App\Http\Controllers\api\v1\AdministratorController::class);
+        //Route::apiResource('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class)->only(['index', 'show']);
         Route::apiResource('/v1/contracts', App\Http\Controllers\api\v1\ContractController::class)->only(['list', 'ShowSinParametros']);
-        Route::apiResource('/v1/customers', App\Http\Controllers\api\v1\CustomerController::class)->only(['index']);
-        Route::apiResource('/v1/suppliers', App\Http\Controllers\api\v1\SupplierController::class)->only(['index']);
     });
+
+    Route::apiResource('/v1/suppliers', App\Http\Controllers\api\v1\SupplierController::class)->only(['index'])->middleware('checkCustomerIdentifier', 'checkAdminIdentifier');
+    Route::apiResource('/v1/customers', App\Http\Controllers\api\v1\CustomerController::class)->only(['index'])->middleware('checkSupplierIdentifier', 'checkAdminIdentifier');
 }
 ); 

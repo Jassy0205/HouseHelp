@@ -13,7 +13,14 @@ class Application extends Model
 
     protected $fillable = [
         'description',
+        'resolucion',
     ];
+
+    public function isPendiente()
+    {
+        // logic to check if the application has a definite supplier
+        return $this->resolucion == 'pendiente';
+    }
 
     public function suppliers()
     {

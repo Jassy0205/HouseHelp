@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->string('description', 300);
+            $table->enum('resolucion', ['pendiente', 'resuelta']);
             $table->timestamps();
 
             $table->foreignId('client')->nullable();

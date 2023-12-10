@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class checkAdminIdentifier
@@ -16,11 +18,14 @@ class checkAdminIdentifier
     
     public function handle($request, Closure $next)
     {
-        if (auth()->user()->isAdmin()) {
+        $user = User::where('email', Auth::user()->email)->where('type', 'admin')->first();
+
+        if ($user != null)
+        {
             return $next($request);
         }
 
-        abort(403, 'No tienes permisos para acceder a esta página.');
+        return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);
     }
 
 }
