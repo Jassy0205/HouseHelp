@@ -35,10 +35,6 @@ class RatingController extends Controller
         {
             $ratings = $supplier->$ratings;
             return response()->json(['data' => RatingResource::collection($ratings)], 200); //Código de respuesta
-        }else
-        {
-            $ratings = Rating::all();
-            return response()->json(['data' => RatingResource::collection($ratings)], 200); //Código de respuesta
         }
     }
 
@@ -66,7 +62,7 @@ class RatingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(string $id, Rating $rating)
     {
         //
     }
@@ -74,7 +70,7 @@ class RatingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, Rating $rating)
     {
         //
     }
