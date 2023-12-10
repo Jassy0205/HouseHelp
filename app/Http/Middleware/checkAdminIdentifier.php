@@ -13,7 +13,7 @@ class checkAdminIdentifier
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    // Ejemplo de middleware para verificar el rol de administrador
+    
     public function handle($request, Closure $next)
     {
         if (auth()->user()->isAdmin()) {

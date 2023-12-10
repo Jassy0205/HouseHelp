@@ -14,6 +14,16 @@ class AdministratorResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $user = User::find($this->info_personal);
+
+        return [
+            'code' => $this->id,
+            'identification' => $user->identification_card,
+            'full_name'  => $user->name. ' ' .$user->lastname, #Concatenación: $user->firstname . ' '. $user->lastname
+            'username'  => $user->email,
+            'phone' => $user->phone,
+            'gender' => $user->gender,
+            'creation_date' => $user->updated_at
+        ]
     }
 }

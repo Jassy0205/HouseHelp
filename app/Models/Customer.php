@@ -20,6 +20,7 @@ class Customer extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'identity_verified'
     ];
 
     public $timestamps = false;
