@@ -23,7 +23,7 @@ class AdministratorResource extends JsonResource
             'username'  => $user->email,
             'phone' => $user->phone,
             'gender' => $user->gender,
-            'creation_date' => $user->updated_at
-        ]
+            'creation_date' => $user->updated_at,
+        ];
     }
 }
