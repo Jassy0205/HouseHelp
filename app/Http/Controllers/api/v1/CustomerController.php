@@ -91,7 +91,7 @@ class CustomerController extends Controller
             return response()->json(['message' => $e->getMessage()], $e->status);
         }    
         
-        if ($customer['verification'] == 'verificado')
+        if ($request->input('verification') == 'verificado')
             return  response()->json(['data' => 'Cliente verificado correctamente', new CustomerResource($customer)], 200);
         else
         return  response()->json(['data' => 'Cliente no ha sido verificado', new CustomerResource($customer)], 200); 

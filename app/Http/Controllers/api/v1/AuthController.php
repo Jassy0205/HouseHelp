@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Requests\api\v1\SupplierStoreRequest;
 use App\Http\Resources\api\v1\CustomerResource;
 use App\Http\Resources\api\v1\SupplierResource;
+use App\Http\Resources\api\v1\AdministratorResource;
 use App\Http\Requests\api\v1\UserStoreRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use App\Models\Administrator;
 use App\Models\Supplier;
 use App\Models\Customer;
 use App\Models\User;
@@ -183,7 +185,7 @@ class AuthController extends Controller
     public function registerAdministrator(UserStoreRequest $request)
     {
         $email = $request->input('email');
-        $existeUsuario = Administrator::where('email', $email)->exists();
+        $existeUsuario = User::where('email', $email)->where('type', 'admin') ->exists();
 
         if ($existeUsuario) {
             return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);

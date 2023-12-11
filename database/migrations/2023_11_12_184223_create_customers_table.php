@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->enum('verification', ['verificado', 'sin verificar']);
+            $table->enum('verification', ['sin verificar', 'verificado']);
 
             $table->foreignId('info_personal')->nullable()->unique();
             $table->foreign('info_personal')->references('id')->on('users')->nullOnDelete()->cascadeOnUpdate();

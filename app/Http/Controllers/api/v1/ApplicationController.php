@@ -22,11 +22,11 @@ class ApplicationController extends Controller
     {
         $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $customer = Customer::where('info_personal', $user->id)->first();
         $atributosPivote = [];
 
-        if ($user['type'] == 'cliente')
+        if ($user['type'] == 'cliente' and $customer['verification'] == 'verificado')
         {
-            $customer = Customer::where('info_personal', $user->id)->first();
             foreach ($customer->applications as $app)
             {
                 foreach ($app->suppliers as $sup) {
@@ -65,10 +65,10 @@ class ApplicationController extends Controller
     {
         $user = Auth::user();
         $application = Application::create($request->all());
+        $customer = Customer::where('info_personal', $user->id)->first();
 
-        if ($user['type'] == 'cliente')
+        if ($user['type'] == 'cliente' and $customer['verification'] == 'verificado')
         {
-            $customer = Customer::where('info_personal', $user->id)->first();
             $application['client'] = $customer["id"];
             $suppliers = Supplier::all();
 
@@ -95,10 +95,10 @@ class ApplicationController extends Controller
     {
         $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $customer = Customer::where('info_personal', $user->id)->first();
 
-        if ($user['type'] == 'cliente')
+        if ($user['type'] == 'cliente' and $customer['verification'] == 'verificado')
         {
-            $customer = Customer::where('info_personal', $user->id)->first();
             if ($application['client'] == $customer["id"])
             {
                 foreach ($application->suppliers as $sup) {
@@ -128,9 +128,10 @@ class ApplicationController extends Controller
     {
         $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $customer = Customer::where('info_personal', $user->id)->first();
         $usuarioAplicacion = $application->customer->user;
 
-        if ($user['type'] == 'cliente' and $user['id'] == $usuarioAplicacion['id'])
+        if ($user['type'] == 'cliente' and $user['id'] == $usuarioAplicacion['id'] and $customer['verification'] == 'verificado')
         {
             try {
                 $request->validate([
@@ -184,8 +185,9 @@ class ApplicationController extends Controller
     {
         $user = Auth::user();
         $usuarioAplicacion = $application->customer->user;
+        $customer = Customer::where('info_personal', $user->id)->first();
 
-        if ($user['type'] == 'cliente' and $user['id'] == $usuarioAplicacion['id'])
+        if ($user['type'] == 'cliente' and $user['id'] == $usuarioAplicacion['id'] and $customer['verification'] == 'verificado')
         {
             $suppliers = Supplier::all();
 

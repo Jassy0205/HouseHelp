@@ -18,12 +18,12 @@ class CustomerSeeder extends Seeder
         Customer::create([
             'info_personal' => '1',
             'home' => '1',
-            'verification' => 'verificado',
         ]);
 
         Customer::create([
             'info_personal' => '2',
             'home' => '1',
+            'verification' => 'verificado',
         ]);
 
         Customer::create([
