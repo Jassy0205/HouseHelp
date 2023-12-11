@@ -23,7 +23,7 @@ class CheckCustomerLocation
 
         if ($customer['home'] != null)
         {
-            return response()->json(['message' => 'Bienvenido'], 200);
+            return $next($request);
         }
 
         return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);

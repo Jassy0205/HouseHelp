@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\Customer;
 use App\Models\User;
-use App\Http\Controllers\api\v1\Customer;
 
 
 use Illuminate\Validation\ValidationException;
