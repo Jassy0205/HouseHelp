@@ -117,13 +117,57 @@ class ContractController extends Controller
             
                 if ($request->has('status') and $contrato['status'] == 'en revision') {
                     $contrato->update(['status' => $request->input('status')]);
+                }
+                
+                if ($contrato['status'] == 'aceptado') {
+                    $linkCheckout = $this->checkout($id, $idcontrato);
+                    return response()->json(['data' => $linkCheckout], 200);
+                } else {
                     return response()->json(['data' => new ContractAllResource($contrato)], 200);
                 }
-            
+                
+
             } catch (ValidationException $e) {
                 return response()->json(['message' => $e->getMessage()], $e->status);
             }    
         }
+    }
+
+    public function checkout(string $id, string $idcontrato)
+    {
+        // validate status is accepted
+        $user = Auth::user();
+        $contrato = Contract::where('provider', $id)->where('id', $idcontrato)->first();
+
+        // redirect to stripe
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $LineItems = [
+            'price_data' => [
+                'currency' => 'usd',
+                'product_data' => [
+                    'name' => $contrato->description,
+                ],
+                'unit_amount' => $contrato->price,
+            ],
+            'quantity' => 1,
+        ];
+
+        
+        try {
+            $session = \Stripe\Checkout\Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [$LineItems],
+                'mode' => 'payment',
+                'success_url' => 'https://example.com/success',
+                'cancel_url' => 'https://example.com/cancel',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+        
+        // return stripe checkout link
+        return response()->json(['message' => $session->url], 200);
     }
 
     /**

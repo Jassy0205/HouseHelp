@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function () {
 //     return $request->user();
 // });
+// Route::middleware('auth:sanctum')->get('/user', function () {
+//     return $request->user();
+// });
 
 Route::post('/v1/login', [App\Http\Controllers\api\v1\AuthController::class, 'login'])->name('api.login');
 
@@ -42,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::apiResource('/v1/suppliers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);//->name('api.suppliers_messages');
             Route::apiResource('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class);
             Route::apiResource('/v1/suppliers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['store', 'destroy']);//->name('api.suppliers_contracts.display');
+            Route::post('/v1/suppliers/{id_s}/contracts/{id_c}/checkout', [App\Http\Controllers\api\v1\StripePaymentController::class, 'checkout']); // No funciono debido a los permisos de Stripe
         });
     }); 
     

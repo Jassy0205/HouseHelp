@@ -17,6 +17,9 @@ use App\Models\Customer;
 use App\Models\User;
 
 
+use Illuminate\Validation\ValidationException;
+
+
 class AuthController extends Controller
 {
     public function login(Request $request)
