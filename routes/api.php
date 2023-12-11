@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/v1/login', [App\Http\Controllers\api\v1\AuthController::class, 'login'])->name('api.login');
 
-Route::post('/v1/register/customer', [App\Http\Controllers\api\v1\AuthController::class, 'registerCustomer'])->name('api.creation_customer');
-Route::post('/v1/register/supplier', [App\Http\Controllers\api\v1\AuthController::class, 'registerSupplier'])->name('api.creation_supplier');
-Route::post('/v1/register/administrator', [App\Http\Controllers\api\vi\AuthController::class, 'registerAdministrator'])->name('api.creation_administrator');
+Route::post('/v1/register-customers', [App\Http\Controllers\api\v1\AuthController::class, 'registerCustomer'])->name('api.creation_customer');
+Route::post('/v1/register-suppliers', [App\Http\Controllers\api\v1\AuthController::class, 'registerSupplier'])->name('api.creation_supplier');
+Route::post('/v1/register-administrator', [App\Http\Controllers\api\vi\AuthController::class, 'registerAdministrator'])->name('api.creation_administrator');
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('checkCustomerIdentifier')->group(function () {
         //Se definen las rutas a las que tiene acceso customer
-        Route::singleton('/v1/customers/profile', App\Http\Controllers\api\v1\CustomerController::class);//->name('api.customer.profile');
+        Route::singleton('/v1/profile-customers', App\Http\Controllers\api\v1\CustomerController::class);//->name('api.customer.profile');
         //Se definen las rutas a las que tiene acceso customer una vez haya ingresado su dirección residencial
         Route::middleware('checkCustomerLocation')->group(function () {
             Route::apiResource('/v1/suppliers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);//->name('api.suppliers_messages');
@@ -47,7 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::middleware('checkSupplierIdentifier')->group(function () {
         //Se definen las rutas a las que tiene acceso supplier
-        Route::singleton('/v1/suppliers/profile', App\Http\Controllers\api\v1\SupplierController::class);
+        Route::singleton('/v1/profile-suppliers', App\Http\Controllers\api\v1\SupplierController::class);
         //Se definen las rutas a las que tiene acceso supplier una vez haya ingresado la dirección del establecimiento
         Route::middleware('checkSupplierLocation')->group(function () {
             Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);//->name('api.customer_messages');
@@ -58,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware(['checkAdminIdentifier'])->group(function () {
         // Definir rutas para las funciones de administración aquí
-        Route::singleton('/v1/administrators/profile', App\Http\Controllers\api\v1\AdministratorController::class);
+        Route::singleton('/v1/profile-administrators', App\Http\Controllers\api\v1\AdministratorController::class);
         //Route::put('v1/customers/{id}/administrators',  App\Http\Controllers\api\v1\AdministratorController::class, 'verifyCustomer')
         Route::get('/v1/suppliers/{id}', [App\Http\Controllers\api\v1\SupplierController::class, 'checkAndSuspendSupplier'])->name('api.suppliers.suspend');
         Route::post('/v1/administrators', [App\Http\Controllers\api\v1\AdministratorController::class, 'store'])->name('api.creation_admin');

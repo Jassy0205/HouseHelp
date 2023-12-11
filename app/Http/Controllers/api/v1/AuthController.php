@@ -73,10 +73,17 @@ class AuthController extends Controller
         // Verificar que los datos provistos sean los correctos y que
         // efectivamente el usuario se autentique con ellos utilizando
         // los datos de la tabla "users".
-        if (!Auth::attempt($request->only('email', 'password')) and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
+        $password = md5($request->input('password'));
+
+        if (!Auth::attempt(['email' => $request->input('email'), 'password' => $password]) && !Auth::guard('supplier')->attempt(['email' => $request->input('email'), 'password' => $password])) 
         {
             return response()->json(['message' => 'Invalid login details'], 401);
         }
+
+        //if (!Auth::attempt($request->only('email', 'password')) and !Auth::guard('supplier')->attempt($request->only('email', 'password')))
+        //{
+        //    return response()->json(['message' => 'Invalid login details'], 401);
+        //}
 
         if ($request['type'] == 'customer')
         {     
@@ -90,11 +97,7 @@ class AuthController extends Controller
                 $user->tokens()->where('name', $tokenType)->delete();
             }
             
-            $customer = Customer::where('info_personal', $user->id)->first();
-            if ($customer['verification'] == 'verificado'){
-                // Crear un nuevo token tipo Bearer para el usuario autenticado.
-                $token = $user->createToken($tokenType);
-            }
+            $token = $user->createToken($tokenType);
         }else if($request['type'] == 'administrator')
         {
             // Una vez autenticado, obtener la información del usuario en sesión.
@@ -117,11 +120,7 @@ class AuthController extends Controller
             // evitar, en este caso, tenga mas de uno del mismo tipo.
             $supplier->tokens()->where('name', $tokenType)->delete();
 
-            if ($supplier['suspended'] == false)
-            {
-                // Crear un nuevo token tipo Bearer para el usuario autenticado.
-                $token = $supplier->createToken($tokenType);
-            }
+            $token = $supplier->createToken($tokenType);
         }
 
         // Enviar el token recién creado al cliente.
@@ -144,7 +143,11 @@ class AuthController extends Controller
             return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);
         else
         {
-            $user = User::create($request->all());
+            $hashedPassword = md5($request->input('password'));
+            $userData = $request->all();
+            $userData['password'] = $hashedPassword;
+
+            $user = User::create($userData);
             $customer = new Customer();
 
             $customer['info_personal'] = $user['id'];
@@ -164,7 +167,12 @@ class AuthController extends Controller
             return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);
         else
         {
-            $supplier = Supplier::create($request->all());
+            $hashedPassword = md5($request->input('password'));
+
+            $supplierData = $request->all();
+            $supplierData['password'] = $hashedPassword;
+
+            $supplier = Supplier::create($supplierData);
             return response()->json(['data' => new SupplierResource($supplier)], 200);
         }
     }
@@ -177,7 +185,11 @@ class AuthController extends Controller
         if ($existeUsuario) {
             return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);
         } else {
-            $user = User::create($request->all());
+            $hashedPassword = md5($request->input('password'));
+            $userData = $request->all();
+            $userData['password'] = $hashedPassword;
+
+            $user = User::create($userData);
             $administrator = new Administrator();
 
             $administrator['info_personal'] = $user['id'];

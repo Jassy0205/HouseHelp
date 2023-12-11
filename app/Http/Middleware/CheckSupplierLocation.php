@@ -19,7 +19,7 @@ class CheckSupplierLocation
     {
         $supplier = Supplier::where('email', Auth::user()->email)->first();
 
-        if ($supplier['company'] != null)
+        if ($supplier['company'] != null and $supplier['suspended'] == false)
         {
             return $next($request);
         }

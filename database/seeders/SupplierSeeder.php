@@ -21,7 +21,7 @@ class SupplierSeeder extends Seeder
             'phone' => "3153015393",
             'description' => 'Somos una empresa lider en consrucción y planificación de espacios',
             'email' => 'construcciones_sa@gmail.com',
-            'password' => 'hola123',
+            'password' => md5('hola123'),
             'company' => '4'
         ]);
 
@@ -31,7 +31,7 @@ class SupplierSeeder extends Seeder
             'phone' => "3163015393",
             'description' => 'Expertos en instalación y repación de redes o dispositivos eléctrica',
             'email' => 'in_electric@gmail.com',
-            'password' => 'hola123',
+            'password' => md5('hola123'),
             'company' => '5'
         ]);
 
@@ -41,7 +41,7 @@ class SupplierSeeder extends Seeder
             'phone' => "3183015393",
             'description' => 'Vendemos los electrodomesticos de la más alta calidad',
             'email' => 'electrodomesticos_jll@gmail.com',
-            'password' => 'hola123',
+            'password' => md5('hola123'),
             'company' => '6',
             'suspended' => true
         ]);

@@ -21,9 +21,9 @@ class CheckCustomerLocation
         $user = Auth::user();
         $customer = Customer::where('info_personal', $user->id)->first();
 
-        if ($customer['home'] != null)
+        if ($customer['home'] != null and $customer['verification'] == 'verificado')
         {
-            return response()->json(['message' => 'Bienvenido'], 200);
+            return $next($request);
         }
 
         return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);

@@ -59,7 +59,7 @@ class LocationSeeder extends Seeder
             'city' => 'Manizales',
             'department' => 'Caldas',
             'address' => 'Carrera 56C #39-45',
-            'neighborhood' => 'Altos del San Juan',
+            'neighborhood' => 'La sultana',
             'specifications' => 'local 205, segundo piso al lado de suspiros',
         ]);
 
