@@ -57,10 +57,43 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(string $id)
     {
-        #$customer -> delete();
+        $admin = Auth::user();
+        if ($admin->type !== 'admin') {
+            return response()->json(['message' => 'No tienes acceso a esta ruta'], 403);
+        }
 
-        #return response()->json(null, 204); //Codigo de error para "No content"
+        $customer = Customer::find($id);
+
+        if (!$customer) {
+            return response()->json(['data' => 'Cliente no encontrado'], 404);
+        }
+
+        $customer->delete();
+        return  response()->json(['data' => 'Cliente eliminado correctamente'], 200);
+    }
+
+    public function verifyCustomer(string $id, Request $request)
+    {
+        $customer = Customer::where('id', $id)->first();
+
+        try {
+            $request->validate([
+                'verification' => 'required|ascii|in:verificado, sin verificar', // Permitir que sea nulo o contener un string válido
+            ]);
+        
+            if ($request->has('verification') and $customer['verification'] == 'sin verificar') {
+                $customer->update(['verification' => $request->input('verification')]);
+            }
+        
+        } catch (ValidationException $e) {
+            return response()->json(['message' => $e->getMessage()], $e->status);
+        }    
+        
+        if ($customer['verification'] == 'verificado')
+            return  response()->json(['data' => 'Cliente verificado correctamente', new CustomerResource($customer)], 200);
+        else
+        return  response()->json(['data' => 'Cliente no ha sido verificado', new CustomerResource($customer)], 200); 
     }
 }

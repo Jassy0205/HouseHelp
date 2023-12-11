@@ -35,6 +35,17 @@ class SupplierSeeder extends Seeder
             'company' => '5'
         ]);
 
+        Supplier::create([
+            'name' => 'InElectric',
+            'owner' => 'Maria Castro',
+            'phone' => "3163015393",
+            'description' => 'Expertos en instalación y repación de redes o dispositivos eléctrica',
+            'email' => 'in_electric@gmail.com',
+            'password' => 'hola123',
+            'company' => '5',
+            'suspended' => true
+        ]);
+
         Supplier::reguard();
     }
 }

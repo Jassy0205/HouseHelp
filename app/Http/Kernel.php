@@ -57,6 +57,8 @@ class Kernel extends HttpKernel
         'checkSupplierLocation' => \App\Http\Middleware\CheckSupplierLocation::class,
         'checkCustomerIdentifier' => \App\Http\Middleware\CheckCustomerIdentifier::class,
         'checkSupplierIdentifier' => \App\Http\Middleware\CheckSupplierIdentifier::class,
+        'CustomerAdminMiddleware' => \App\Http\Middleware\CustomerAdminMiddleware::class, 
+        'SupplierAdminMiddleware' => \App\Http\Middleware\SupplierAdminMiddleware::class,
         'checkAdminIdentifier' => \App\Http\Middleware\checkAdminIdentifier::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

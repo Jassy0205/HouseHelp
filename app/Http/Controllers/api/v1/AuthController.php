@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use App\Models\Customer;
 use App\Models\User;
 
 
@@ -85,11 +86,15 @@ class AuthController extends Controller
 
             // Borrar los tokens anteriores (tipo Bearer) del usuario para
             // evitar, en este caso, tenga mas de uno del mismo tipo.
-            if ($user['type'] == 'customer')
+            if ($user['type'] == 'customer'){
                 $user->tokens()->where('name', $tokenType)->delete();
-
-            // Crear un nuevo token tipo Bearer para el usuario autenticado.
-            $token = $user->createToken($tokenType);
+            }
+            
+            $customer = Customer::where('info_personal', $user->id)->first();
+            if ($customer['verification'] == 'verificado'){
+                // Crear un nuevo token tipo Bearer para el usuario autenticado.
+                $token = $user->createToken($tokenType);
+            }
         }else if($request['type'] == 'administrator')
         {
             // Una vez autenticado, obtener la información del usuario en sesión.
@@ -103,17 +108,6 @@ class AuthController extends Controller
 
             // Crear un nuevo token tipo Bearer para el usuario autenticado.
             $token = $user->createToken($tokenType);
-        }elseif($request['tipo'] == 'admininistrator'){
-
-            $tokenType = 'Bearer';
-            $user = User::where('email', $request['email'])->firstOrFail();
-
-            // Borrar los tokens anteriores (tipo Bearer) del usuario para
-            // evitar, en este caso, tenga mas de uno del mismo tipo.
-            $user->tokens()->where('name', $tokenType)->delete();
-
-            // Crear un nuevo token tipo Bearer para el usuario autenticado.
-            $token = $user->createToken($tokenType);
         }else{
             // Una vez autenticado, obtener la información del usuario en sesión.
             $tokenType = 'Bearer';
@@ -123,8 +117,11 @@ class AuthController extends Controller
             // evitar, en este caso, tenga mas de uno del mismo tipo.
             $supplier->tokens()->where('name', $tokenType)->delete();
 
-            // Crear un nuevo token tipo Bearer para el usuario autenticado.
-            $token = $supplier->createToken($tokenType);
+            if ($supplier['suspended'] == false)
+            {
+                // Crear un nuevo token tipo Bearer para el usuario autenticado.
+                $token = $supplier->createToken($tokenType);
+            }
         }
 
         // Enviar el token recién creado al cliente.
