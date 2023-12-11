@@ -36,13 +36,13 @@ class SupplierSeeder extends Seeder
         ]);
 
         Supplier::create([
-            'name' => 'InElectric',
-            'owner' => 'Maria Castro',
-            'phone' => "3163015393",
-            'description' => 'Expertos en instalación y repación de redes o dispositivos eléctrica',
-            'email' => 'in_electric@gmail.com',
+            'name' => 'Electrodomesticos JLL',
+            'owner' => 'Gilberto Santa Rosa',
+            'phone' => "3183015393",
+            'description' => 'Vendemos los electrodomesticos de la más alta calidad',
+            'email' => 'electrodomesticos_jll@gmail.com',
             'password' => 'hola123',
-            'company' => '5',
+            'company' => '6',
             'suspended' => true
         ]);
 

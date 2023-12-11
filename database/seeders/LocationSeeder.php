@@ -55,6 +55,13 @@ class LocationSeeder extends Seeder
             'specifications' => 'local 101, primer piso del centro comercial',
         ]);
 
+        Location::create([
+            'city' => 'Manizales',
+            'department' => 'Caldas',
+            'address' => 'Carrera 56C #39-45',
+            'neighborhood' => 'Altos del San Juan',
+            'specifications' => 'local 205, segundo piso al lado de suspiros',
+        ]);
 
         Location::reguard();
     }
