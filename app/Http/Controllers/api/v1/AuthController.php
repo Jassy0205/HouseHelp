@@ -14,6 +14,10 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Http\Controllers\api\v1\Customer;
+
+
+use Illuminate\Validation\ValidationException;
 
 
 class AuthController extends Controller

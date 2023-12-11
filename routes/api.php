@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function () {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function () {
+//     return $request->user();
+// });
 
 Route::post('/v1/login', [App\Http\Controllers\api\v1\AuthController::class, 'login'])->name('api.login');
 
@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::apiResource('/v1/suppliers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
             Route::apiResource('/v1/suppliers/{id}/ratings', App\Http\Controllers\api\v1\RatingController::class);
             Route::apiResource('/v1/suppliers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['store', 'destroy']);
+            Route::post('/v1/suppliers/{id_s}/contracts/{id_c}/checkout', [App\Http\Controllers\api\v1\StripePaymentController::class, 'checkout']); // No funciono debido a los permisos de Stripe
         });
     }); 
     
@@ -49,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::singleton('/v1/suppliers/profile', App\Http\Controllers\api\v1\SupplierController::class);//->only(['show', 'update']);
         //Se definen las rutas a las que tiene acceso supplier una vez haya ingresado la dirección del establecimiento
         Route::middleware('checkSupplierLocation')->group(function () {
-           Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
+            Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
             Route::get('/v1/ratings', [App\Http\Controllers\api\v1\RatingController::class, 'list']);
             Route::apiResource('/v1/customers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['update', 'destroy']);
         });

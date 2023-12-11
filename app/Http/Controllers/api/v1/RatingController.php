@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\Rating;
+use App\Models\Customer;
 
 class RatingController extends Controller
 {
