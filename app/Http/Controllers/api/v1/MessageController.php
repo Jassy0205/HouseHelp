@@ -72,10 +72,11 @@ class MessageController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, Message $message)
+    public function show(string $id, string $idmessage)
     {
         $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $message = Message::where('id', $idmessage)->first();
 
         if ($user['type'] == 'cliente')
         {
@@ -93,7 +94,7 @@ class MessageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, Message $message)
     {
         //
     }
@@ -101,10 +102,11 @@ class MessageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id, Message $message)
+    public function destroy(string $id, string $idmessage)
     {
         $user = Auth::user();
         $supplier = Supplier::where('email', Auth::user()->email)->first();
+        $message = Message::where('id', $idmessage)->first();
 
         if ($user['type'] == 'cliente')
         {
