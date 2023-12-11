@@ -23,6 +23,7 @@ Route::post('/v1/login', [App\Http\Controllers\api\v1\AuthController::class, 'lo
 
 Route::post('/v1/register/customer', [App\Http\Controllers\api\v1\AuthController::class, 'registerCustomer'])->name('api.creation_customer');
 Route::post('/v1/register/supplier', [App\Http\Controllers\api\v1\AuthController::class, 'registerSupplier'])->name('api.creation_supplier');
+Route::post('/v1/register/administrator', [App\Http\Controllers\api\vi\AuthController::class, 'registerAdministrator'])->name('api.creation_administrator');
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -49,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::singleton('/v1/supplier/profile', App\Http\Controllers\api\v1\SupplierController::class);//->only(['show', 'update']);
         //Se definen las rutas a las que tiene acceso supplier una vez haya ingresado la dirección del establecimiento
         Route::middleware('checkSupplierLocation')->group(function () {
-           Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
+            Route::apiResource('/v1/customers/{id}/messages', App\Http\Controllers\api\v1\MessageController::class)->except(['update', 'destroy']);
             Route::get('/v1/ratings', [App\Http\Controllers\api\v1\RatingController::class, 'list']);
             Route::apiResource('/v1/customers/{id}/contracts', App\Http\Controllers\api\v1\ContractController::class)->except(['update', 'destroy']);
         });
