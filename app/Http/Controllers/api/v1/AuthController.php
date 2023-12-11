@@ -103,6 +103,17 @@ class AuthController extends Controller
 
             // Crear un nuevo token tipo Bearer para el usuario autenticado.
             $token = $user->createToken($tokenType);
+        }elseif($request['tipo'] == 'admininistrator'){
+
+            $tokenType = 'Bearer';
+            $user = User::where('email', $request['email'])->firstOrFail();
+
+            // Borrar los tokens anteriores (tipo Bearer) del usuario para
+            // evitar, en este caso, tenga mas de uno del mismo tipo.
+            $user->tokens()->where('name', $tokenType)->delete();
+
+            // Crear un nuevo token tipo Bearer para el usuario autenticado.
+            $token = $user->createToken($tokenType);
         }else{
             // Una vez autenticado, obtener la información del usuario en sesión.
             $tokenType = 'Bearer';
@@ -158,6 +169,26 @@ class AuthController extends Controller
         {
             $supplier = Supplier::create($request->all());
             return response()->json(['data' => new SupplierResource($supplier)], 200);
+        }
+    }
+
+    public function registerAdministrator(UserStoreRequest $request)
+    {
+        $email = $request->input('email');
+        $existeUsuario = Administrator::where('email', $email)->exists();
+
+        if ($existeUsuario) {
+            return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);
+        } else {
+            $user = User::create($request->all());
+            $administrator = new Administrator();
+
+            $administrator['info_personal'] = $user['id'];
+            $administrator->user()->associate($user);
+
+            $administrator->save();
+
+            return response()->json(['data' => new AdministratorResource($administrator)], 200);
         }
     }
 }
