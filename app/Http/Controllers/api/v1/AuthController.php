@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use App\Models\Customer;
 use App\Models\User;
 use App\Http\Controllers\api\v1\Customer;
 
@@ -28,24 +29,35 @@ class AuthController extends Controller
         // para hacer la autenticación: "email" y "password".
         try {
             $request->validate([
-                'tipo' => 'required|in:customer,supplier',
+                'type' => 'required|in:customer,supplier,administrator',
                 'password' => 'required|string|min:7',
             ]);
         } catch (ValidationException $e) {
             return response()->json(['message' => $e->getMessage()], $e->status);
         }
 
-        if ($request['tipo'] == 'customer')
+        if ($request['type'] == 'customer')
         {
             try {
                 $validator = Validator::make($request->all(), [
-                    'email' => [
-                        'required',
-                        'string',
-                        'email',
-                        'max:255',
+                    'email' => ['required', 'string', 'email','max:255',
                         Rule::exists('users')->where(function ($query) {
                             $query->where('type', 'cliente');
+                        }),
+                    ],
+                ]);
+            
+                $validator->validate();
+            } catch (ValidationException $e) {
+                return response()->json(['message' => $e->getMessage()], $e->status);
+            }
+        }else if ($request['type'] == 'administrator')
+        {
+            try {
+                $validator = Validator::make($request->all(), [
+                    'email' => ['required', 'string', 'email','max:255',
+                        Rule::exists('users')->where(function ($query) {
+                            $query->where('type', 'admin');
                         }),
                     ],
                 ]);
@@ -70,7 +82,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid login details'], 401);
         }
 
-        if ($request['tipo'] == 'customer')
+        if ($request['type'] == 'customer')
         {     
             // Una vez autenticado, obtener la información del usuario en sesión.
             $tokenType = 'Bearer';
@@ -78,7 +90,25 @@ class AuthController extends Controller
 
             // Borrar los tokens anteriores (tipo Bearer) del usuario para
             // evitar, en este caso, tenga mas de uno del mismo tipo.
-            $user->tokens()->where('name', $tokenType)->delete();
+            if ($user['type'] == 'customer'){
+                $user->tokens()->where('name', $tokenType)->delete();
+            }
+            
+            $customer = Customer::where('info_personal', $user->id)->first();
+            if ($customer['verification'] == 'verificado'){
+                // Crear un nuevo token tipo Bearer para el usuario autenticado.
+                $token = $user->createToken($tokenType);
+            }
+        }else if($request['type'] == 'administrator')
+        {
+            // Una vez autenticado, obtener la información del usuario en sesión.
+            $tokenType = 'Bearer';
+            $user = User::where('email', $request['email'])->firstOrFail();
+
+            // Borrar los tokens anteriores (tipo Bearer) del usuario para
+            // evitar, en este caso, tenga mas de uno del mismo tipo.
+            if ($user['type'] == 'admin')
+                $user->tokens()->where('name', $tokenType)->delete();
 
             // Crear un nuevo token tipo Bearer para el usuario autenticado.
             $token = $user->createToken($tokenType);
@@ -91,8 +121,11 @@ class AuthController extends Controller
             // evitar, en este caso, tenga mas de uno del mismo tipo.
             $supplier->tokens()->where('name', $tokenType)->delete();
 
-            // Crear un nuevo token tipo Bearer para el usuario autenticado.
-            $token = $supplier->createToken($tokenType);
+            if ($supplier['suspended'] == false)
+            {
+                // Crear un nuevo token tipo Bearer para el usuario autenticado.
+                $token = $supplier->createToken($tokenType);
+            }
         }
 
         // Enviar el token recién creado al cliente.
@@ -137,6 +170,26 @@ class AuthController extends Controller
         {
             $supplier = Supplier::create($request->all());
             return response()->json(['data' => new SupplierResource($supplier)], 200);
+        }
+    }
+
+    public function registerAdministrator(UserStoreRequest $request)
+    {
+        $email = $request->input('email');
+        $existeUsuario = Administrator::where('email', $email)->exists();
+
+        if ($existeUsuario) {
+            return response()->json(['message' => 'El correo electrónico ya está registrado'], Response::HTTP_CONFLICT);
+        } else {
+            $user = User::create($request->all());
+            $administrator = new Administrator();
+
+            $administrator['info_personal'] = $user['id'];
+            $administrator->user()->associate($user);
+
+            $administrator->save();
+
+            return response()->json(['data' => new AdministratorResource($administrator)], 200);
         }
     }
 }

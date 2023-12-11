@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone', 10);
             $table->string('description', 300);
             $table->string('email')->unique();
+            $table->boolean('suspended')->default(false);
             $table->timestamps();
 
             $table->rememberToken();

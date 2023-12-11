@@ -35,6 +35,17 @@ class SupplierSeeder extends Seeder
             'company' => '5'
         ]);
 
+        Supplier::create([
+            'name' => 'Electrodomesticos JLL',
+            'owner' => 'Gilberto Santa Rosa',
+            'phone' => "3183015393",
+            'description' => 'Vendemos los electrodomesticos de la más alta calidad',
+            'email' => 'electrodomesticos_jll@gmail.com',
+            'password' => 'hola123',
+            'company' => '6',
+            'suspended' => true
+        ]);
+
         Supplier::reguard();
     }
 }

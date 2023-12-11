@@ -13,13 +13,6 @@ use App\Models\User;
 
 class AdministratorController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth'); 
-        $this->middleware('checkAdminIdentifier');
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -63,7 +56,7 @@ class AdministratorController extends Controller
         $authenticatedUser = Auth::user();
 
         if ($authenticatedUser && $authenticatedUser->type === 'admin') {
-            $administrator = Administrator::where('info_personal', authenticatedUser->id)->first();
+            $administrator = Administrator::where('info_personal', $authenticatedUser->id)->first();
             return response()->json(['data' => new AdministratorResource($administrator)], 200);
         } else {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -103,81 +96,4 @@ class AdministratorController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
     }
-
-
-
-    public function verifyCustomer(Customer $customer)
-    {
-        $admin = Auth::user();
-        if ($admin->type !== 'admin') {
-            abort(403, 'No tienes permisos para verificar clientes.');
-        }
-
-        $customer->update(['verified' => true]);
-
-        return redirect()->back()->with('success', 'Cliente verificado correctamente.');
-    }
-
-    public function deleteCustomer($id)
-    {
-        $admin = Auth::user();
-        if ($admin->type !== 'admin') {
-            abort(403, 'No tienes permisos para eliminar clientes.');
-        }
-
-        $customer = Customer::find($id);
-
-        if (!$customer) {
-            return redirect()->back()->with('error', 'Cliente no encontrado.');
-        }
-
-        $customer->delete();
-
-        return redirect()->back()->with('success', 'Cliente eliminado correctamente.');
-    }
-
-    public function deleteSupplier($id)
-    {
-        $admin = Auth::user();
-        if ($admin->type !== 'admin') {
-            abort(403, 'No tienes permisos para eliminar proveedores.');
-        }
-
-        $supplier = Supplier::find($id);
-
-        if (!$supplier) {
-            return redirect()->back()->with('error', 'Proveedor no encontrado.');
-        }
-
-        $supplier->delete();
-
-        return redirect()->back()->with('success', 'Proveedor eliminado correctamente.');
-    }
-
-    public function checkAndSuspendSupplier($supplierId)
-    {
-        $admin = Auth::user();
-        if ($admin->type !== 'administrator') {
-            abort(403, 'No tienes permisos para realizar esta acción.');
-        }
-
-        $supplier = Supplier::find($supplierId);
-
-        if (!$supplier) {
-            return redirect()->back()->with('error', 'Proveedor no encontrado.');
-        }
-
-        $lowRatings = Rating::where('supplier', $supplierId)
-            ->where('rating', '<', 2.5)
-            ->get();
-
-        if ($lowRatings->count() >= 3) {
-            $supplier->update(['suspended' => true]);
-
-            return redirect()->back()->with('success', 'Proveedor suspendido debido a múltiples calificaciones bajas.');
-        }
-
-        return redirect()->back()->with('success', 'Proveedor no suspendido.');
-    }
-
 }
