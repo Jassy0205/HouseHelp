@@ -13,13 +13,6 @@ use App\Models\User;
 
 class AdministratorController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth'); 
-        $this->middleware('checkAdminIdentifier');
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -63,7 +56,7 @@ class AdministratorController extends Controller
         $authenticatedUser = Auth::user();
 
         if ($authenticatedUser && $authenticatedUser->type === 'admin') {
-            $administrator = Administrator::where('info_personal', authenticatedUser->id)->first();
+            $administrator = Administrator::where('info_personal', $authenticatedUser->id)->first();
             return response()->json(['data' => new AdministratorResource($administrator)], 200);
         } else {
             return response()->json(['message' => 'Unauthorized'], 403);

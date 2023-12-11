@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function () {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function () {
+//     return $request->user();
+// });
 
 Route::post('/v1/login', [App\Http\Controllers\api\v1\AuthController::class, 'login'])->name('api.login');
 
@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['checkAdminIdentifier'])->group(function () {
         // Definir rutas para las funciones de administración aquí
         Route::singleton('/v1/administrators/profile', App\Http\Controllers\api\v1\AdministratorController::class);
+        Route::post('/v1/administrators', [App\Http\Controllers\api\v1\AdministratorController::class, 'store']);
         Route::get('/v1/suppliers/{id}/ratings', [App\Http\Controllers\api\v1\RatingController::class, ['index', 'show']]);
         Route::get('/v1/contracts', [App\Http\Controllers\api\v1\ContractController::class, ['list', 'ShowSinParametros']]);
     });
